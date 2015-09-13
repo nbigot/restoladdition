@@ -145,11 +145,9 @@ namespace RestoLAddition.Data
         public static async Task<RestaurantBill> GetBillAsync(string uniqueId)
         {
             await _sampleDataSource.GetSampleDataAsync();
-Debug.WriteLine("GetBillAsync find: " + uniqueId);
-foreach (var bill in _sampleDataSource.Bills)
-                Debug.WriteLine("found bill: " + bill.UniqueId);
-
-
+//Debug.WriteLine("GetBillAsync find: " + uniqueId);
+//foreach (var bill in _sampleDataSource.Bills)
+//                Debug.WriteLine("found bill: " + bill.UniqueId);
 
             // Simple linear search is acceptable for small data sets
             var matches = _sampleDataSource.Bills.Where((bill) => bill.UniqueId.Equals(uniqueId));

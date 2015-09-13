@@ -24,7 +24,7 @@
     </Page.Resources>
     
     <Grid>
-        <Pivot x:Uid="Appname" Title="La note de resto" x:Name="pivot" CommonNavigationTransitionInfo.IsStaggerElement="True">
+        <Pivot x:Uid="Appname" Title="Resto avec les amis" x:Name="pivot" CommonNavigationTransitionInfo.IsStaggerElement="True">
 
             <!--Pivot item three-->
             <PivotItem
