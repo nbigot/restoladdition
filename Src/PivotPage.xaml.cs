@@ -1,5 +1,5 @@
-﻿using App3.Common;
-using App3.Data;
+﻿using RestoLAddition.Common;
+using RestoLAddition.Data;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,7 +23,7 @@ using Windows.UI.Xaml.Navigation;
 
 // The Pivot Application template is documented at http://go.microsoft.com/fwlink/?LinkID=391641
 
-namespace App3
+namespace RestoLAddition
 {
     public sealed partial class PivotPage : Page
     {
@@ -79,7 +79,7 @@ namespace App3
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
             var RestaurantBill = await SampleDataSource.GetBillAsync("Group-1");
             this.DefaultViewModel[FirstGroupName] = RestaurantBill;
-Debug.WriteLine("NavigationHelper_LoadState ok : " + RestaurantBill.UniqueId);
+//Debug.WriteLine("NavigationHelper_LoadState ok : " + RestaurantBill.UniqueId);
             ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
             PriceStringFormatConverter.PriceStrFormat = resourceLoader.GetString("PriceStrFormat");
             //Debug.WriteLine("found price: "+ PriceStringFormatConverter.PriceStrFormat);

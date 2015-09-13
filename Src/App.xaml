@@ -1,8 +1,8 @@
 ﻿<Application
-    x:Class="App3.App"
+    x:Class="RestoLAddition.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:App3">
+    xmlns:local="using:RestoLAddition">
     <Application.Resources>
         <Color x:Key="BleuCiel">#FF1BA1E2</Color>
     </Application.Resources>

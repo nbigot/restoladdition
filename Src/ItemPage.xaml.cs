@@ -1,5 +1,5 @@
-﻿using App3.Common;
-using App3.Data;
+﻿using RestoLAddition.Common;
+using RestoLAddition.Data;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,7 +21,7 @@ using Windows.UI.Xaml.Navigation;
 
 // The Pivot Application template is documented at http://go.microsoft.com/fwlink/?LinkID=391641
 
-namespace App3
+namespace RestoLAddition
 {
     /// <summary>
     /// A page that displays details for a single item within a group.

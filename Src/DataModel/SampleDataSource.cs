@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Windows.Data.Json;
 using Windows.Storage;
@@ -19,7 +21,7 @@ using Windows.UI.Xaml.Media.Imaging;
 // responsiveness by initiating the data loading task in the code behind for App.xaml when the app 
 // is first launched.
 
-namespace App3.Data
+namespace RestoLAddition.Data
 {
     /// <summary>
     /// part d'une commande pour un individu
@@ -85,13 +87,14 @@ namespace App3.Data
     /// </summary>
     public class RestaurantBill
     {
-        public RestaurantBill(String uniqueId, String title, String subtitle, String imagePath, String description)
+        public RestaurantBill(String uniqueId, String title, String subtitle, String imagePath, String description, DateTime date)
         {
             this.UniqueId = uniqueId;
             this.Title = title;
             this.Subtitle = subtitle;
             this.Description = description;
             this.ImagePath = imagePath;
+            this.Date = date;
             this.Orders = new ObservableCollection<Order>();
         }
 
@@ -100,6 +103,7 @@ namespace App3.Data
         public string Subtitle { get; private set; }
         public string Description { get; private set; }
         public string ImagePath { get; private set; }
+        public DateTime Date { get; private set; }
         public ObservableCollection<Order> Orders { get; private set; }
 
         public decimal Sum
@@ -188,17 +192,35 @@ foreach (var bill in _sampleDataSource.Bills)
                 foreach (JsonValue RestaurantBillValue in jsonArray)
                 {
                     JsonObject RestaurantBillObject = RestaurantBillValue.GetObject();
+                    DateTime date = DateTime.Now;
+                    if (RestaurantBillObject.ContainsKey("Date")) {
+                        // "Date": "/Date(2008-06-15T21:15:07)/",
+                        // http://regexlib.com/(X(1)A(plohCQBrb3JPpHX7KcH8auVKuRp8DdGM8wp_WQvQnRkqt078aQ_FHNpu-E3Q15qMcj_h5r_e1sDU99su-W3jeSa4Rg1YPf-sQ2t6j3wMh1hddZDrF4vczWP07PVccTC83u9Xx3nZSy-1p7Y2br4Fi6q9t_ZFiu_CyGmjBW-cH0xS1ybSZ5-oc4Nut3_tlJ_30))/REDetails.aspx?regexp_id=93
+                        var r = new Regex(@"(?<grdate>20\d{2}(-|\/)((0[1-9])|(1[0-2]))(-|\/)((0[1-9])|([1-2][0-9])|(3[0-1]))(T|\s)(([0-1][0-9])|(2[0-3])):([0-5][0-9]):([0-5][0-9]))");
+                        var strDate = r.Match(RestaurantBillObject["Date"].GetString()).Groups["grdate"].Value;
+                        if (!string.IsNullOrEmpty(strDate))
+                        {
+                            date = DateTime.Parse(strDate);
+                        }
+                        //DateTime.Now.ToString("s")
+                    }
+
                     RestaurantBill bill = new RestaurantBill(RestaurantBillObject["UniqueId"].GetString(),
                                                                 RestaurantBillObject["Title"].GetString(),
                                                                 RestaurantBillObject["Subtitle"].GetString(),
                                                                 RestaurantBillObject["ImagePath"].GetString(),
-                                                                RestaurantBillObject["Description"].GetString());
+                                                                RestaurantBillObject["Description"].GetString(),
+                                                                date
+                                                                );
 
                     foreach (JsonValue OrderValue in RestaurantBillObject["Orders"].GetArray())
                     {
                         JsonObject OrderObject = OrderValue.GetObject();
                         decimal price = 0;
-                        price = decimal.Parse(OrderObject.ContainsKey("Price") ? (OrderObject["Price"].GetString()) : "0", System.Globalization.NumberStyles.AllowDecimalPoint);
+                        price = decimal.Parse(
+                            OrderObject.ContainsKey("Price") ? (OrderObject["Price"].GetString()) : "0",
+                            NumberStyles.AllowDecimalPoint,
+                            CultureInfo.InvariantCulture);
                         var order = new Order(OrderObject["UniqueId"].GetString(),
                                                            OrderObject["Title"].GetString(),
                                                            OrderObject["Subtitle"].GetString(),
@@ -215,7 +237,10 @@ foreach (var bill in _sampleDataSource.Bills)
                             {
                                 JsonObject OrderShareObject = OrderShareValue.GetObject();
                                 decimal sharePrice = 0;
-                                sharePrice = decimal.Parse(OrderShareObject.ContainsKey("Price") ? (OrderShareObject["Price"].GetString()) : "0", System.Globalization.NumberStyles.AllowDecimalPoint);
+                                sharePrice = decimal.Parse(
+                                    OrderShareObject.ContainsKey("Price") ? (OrderShareObject["Price"].GetString()) : "0",
+                                    NumberStyles.AllowDecimalPoint,
+                                    CultureInfo.InvariantCulture);
                                 order.Shares.Add(
                                     new OrderShare(
                                         OrderShareObject["Person"].GetString(),
@@ -230,6 +255,7 @@ foreach (var bill in _sampleDataSource.Bills)
             }
             catch (Exception ex)
             {
+                Debug.WriteLine("Exception in GetSampleDataAsync : " + ex.Message);
                 throw new Exception(ex.Message);
             }
         }

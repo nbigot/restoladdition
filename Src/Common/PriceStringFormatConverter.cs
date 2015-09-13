@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel.Resources;
 using Windows.UI.Xaml.Data;
 
-namespace App3
+namespace RestoLAddition
 {
     // http://stackoverflow.com/questions/24127262/windows-phone-8-1-xaml-stringformat
     public class PriceStringFormatConverter : IValueConverter

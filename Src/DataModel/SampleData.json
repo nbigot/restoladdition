@@ -54,7 +54,8 @@
     "Title": "Group Title: 2",
     "Subtitle": "Group subtitle: 2",
     "ImagePath": "Assets/LightGray.png",
-    "Description" : "Group Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tempor scelerisque lorem in vehicula. Aliquam tincidunt, lacus ut sagittis tristique, turpis massa volutpat augue, eu rutrum ligula ante a ante",
+    "Description": "Group Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tempor scelerisque lorem in vehicula. Aliquam tincidunt, lacus ut sagittis tristique, turpis massa volutpat augue, eu rutrum ligula ante a ante",
+    "Date": "/Date(2008-06-15T21:15:07)/",
     "Orders":
     [
       {
@@ -68,15 +69,15 @@
         "Shares":
         [
           {
-            "Person": "nico #1",
-            "Price": "4"
+            "Person": "Nico",
+            "Price": "4.15"
           },
           {
-            "Person": "xav #1",
+            "Person": "Xav",
             "Price": "5"
           },
           {
-            "Person": "dodo #1",
+            "Person": "Dodo",
             "Price": "6"
           }
         ]
