@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:RestoLAddition.Data"
     mc:Ignorable="d"
-    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
+    DataContext="{Binding DefaultViewModel2, RelativeSource={RelativeSource Mode=Self}}"
     d:DataContext="{Binding Bills, Source={d:DesignData Source=/DataModel/SampleData.json, Type=data:SampleDataSource}}"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
@@ -26,7 +26,7 @@
 
         <!-- Title Panel -->
         <StackPanel Grid.Row="0" Margin="19,0,0,0">
-            <TextBlock Text="Resto avec les amis" x:Uid="Appname" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
+            <TextBlock Text="Resto avec les amis" x:Uid="Header" Style="{ThemeResource TitleTextBlockStyle}" Margin="0,12,0,0"/>
             <TextBlock Text="tous les restos" Margin="0,-6.5,0,26.5" Style="{ThemeResource HeaderTextBlockStyle}" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}"/>
         </StackPanel>
 
@@ -39,11 +39,16 @@
                     ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Grid Margin="0,0,0,15">
+                        <Grid x:Name="ItemBill" Margin="0,0,0,15">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition MinWidth="6" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
+                            <FlyoutBase.AttachedFlyout>
+                            <MenuFlyout>
+                                <MenuFlyoutItem Text="Supprimer" x:Uid="DeleteItem" Click="MenuFlyoutItem_Click" />
+                            </MenuFlyout>
+                        </FlyoutBase.AttachedFlyout>
                             <StackPanel Margin="0" MinWidth="6" MinHeight="10">
                                 <StackPanel.Background>
                                     <SolidColorBrush Color="{StaticResource BleuCiel}"/>
@@ -71,4 +76,9 @@
             </ListView>
         </Grid>
     </Grid>
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton x:Uid="AddNoteBarButton" x:Name="AddNoteBarButton" Label="nouvelle note" Icon="Add" Click="AddNoteBarButton_Click" />
+        </CommandBar>
+    </Page.BottomAppBar>
 </Page>

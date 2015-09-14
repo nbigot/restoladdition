@@ -120,6 +120,9 @@
   <data name="AddAppBarButton.Label" xml:space="preserve">
     <value>ajouter un plat</value>
   </data>
+  <data name="AddNoteBarButton.Label" xml:space="preserve">
+    <value>nouvelle note</value>
+  </data>
   <data name="Appname.Title" xml:space="preserve">
     <value>Resto avec les amis</value>
   </data>

@@ -1,6 +1,9 @@
 ﻿using RestoLAddition.Common;
+using RestoLAddition.Data;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -54,6 +57,12 @@ namespace RestoLAddition
             get { return this.defaultViewModel; }
         }
 
+        private ObservableCollection<RestaurantBill> defaultViewModel2 = new ObservableCollection<RestaurantBill>();
+        public ObservableCollection<RestaurantBill> DefaultViewModel2
+        {
+            get { return this.defaultViewModel2; }
+        }
+
         /// <summary>
         /// Populates the page with content passed during navigation.  Any saved state is also
         /// provided when recreating a page from a prior session.
@@ -65,8 +74,11 @@ namespace RestoLAddition
         /// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested and
         /// a dictionary of state preserved by this page during an earlier
         /// session.  The state will be null the first time a page is visited.</param>
-        private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
+        private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            var bills = await SampleDataSource.GetBillsAsync() as ObservableCollection<RestaurantBill>;
+            //this.DefaultViewModel[FirstGroupName] = RestaurantBill;
+            this.defaultViewModel2 = bills;
         }
 
         /// <summary>
@@ -107,5 +119,28 @@ namespace RestoLAddition
         }
 
         #endregion
+
+        private void AddNoteBarButton_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO
+        }
+
+        private async void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
+        {
+            var menuFlyoutItem = sender as MenuFlyoutItem;
+            if (menuFlyoutItem == null) return;
+            Debug.WriteLine("youpi #1 :)");
+            //Debug.WriteLine(menuFlyoutItem.DataContext.ToString());
+
+            var bill = menuFlyoutItem.DataContext as RestaurantBill;
+            if (bill == null) return;
+
+            Debug.WriteLine("youpi #2 :)");
+
+            var bills = await SampleDataSource.GetBillsAsync() as ObservableCollection<RestaurantBill>;
+            bills.Remove(bill);
+
+            Debug.WriteLine("youpi #3 :)");
+        }
     }
 }

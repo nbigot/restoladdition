@@ -210,13 +210,13 @@ namespace RestoLAddition
         {
             var menuFlyoutItem = sender as MenuFlyoutItem;
             if (menuFlyoutItem == null) return;
-            Debug.WriteLine("youpi :)");
-            Debug.WriteLine(menuFlyoutItem.DataContext.ToString());
+            //Debug.WriteLine("youpi :)");
+            //Debug.WriteLine(menuFlyoutItem.DataContext.ToString());
 
             var item = menuFlyoutItem.DataContext as Order;
             if (item == null) return;
 
-            Debug.WriteLine("re youpi :)");
+            //Debug.WriteLine("re youpi :)");
 
             // HACK : c'est vraiment du code pas propre, ca va que c'est juste pour tester :(
             // delete item by it's unique id
