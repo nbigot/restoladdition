@@ -116,10 +116,12 @@ namespace RestoLAddition
 
         #endregion
 
-        private void AddNoteBarButton_Click(object sender, RoutedEventArgs e)
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+        private async void AddNoteBarButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO
+            SampleDataSource.AddBillAsync();
         }
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
         private async void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {

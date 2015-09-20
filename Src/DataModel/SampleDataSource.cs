@@ -130,10 +130,26 @@ namespace RestoLAddition.Data
     {
         private static SampleDataSource _sampleDataSource = new SampleDataSource();
 
+        public Boolean LoadStatus { get; private set; } = false;
         private ObservableCollection<RestaurantBill> _bills = new ObservableCollection<RestaurantBill>();
         public ObservableCollection<RestaurantBill> Bills
         {
             get { return this._bills; }
+        }
+
+        public static async Task<RestaurantBill> AddBillAsync()
+        {
+            await _sampleDataSource.GetSampleDataAsync();
+            var newUniqueId = Guid.NewGuid().ToString();
+            var now = DateTime.Now;
+            var title = "Resto " + now.ToString("ddd d MMM", CultureInfo.CurrentCulture);
+            var i = 0;
+            while (_sampleDataSource.Bills.Any(billIt => billIt.Title == title)) {
+                title = string.Format("Resto {0} ({1})", now.ToString("ddd d MMM", CultureInfo.CurrentCulture), ++i);
+            }
+            var bill = new RestaurantBill(newUniqueId, title, "", "", "", now );
+            _sampleDataSource.Bills.Add(bill);
+            return bill;
         }
 
         public static async Task<IEnumerable<RestaurantBill>> GetBillsAsync()
@@ -145,10 +161,6 @@ namespace RestoLAddition.Data
         public static async Task<RestaurantBill> GetBillAsync(string uniqueId)
         {
             await _sampleDataSource.GetSampleDataAsync();
-//Debug.WriteLine("GetBillAsync find: " + uniqueId);
-//foreach (var bill in _sampleDataSource.Bills)
-//                Debug.WriteLine("found bill: " + bill.UniqueId);
-
             // Simple linear search is acceptable for small data sets
             var matches = _sampleDataSource.Bills.Where((bill) => bill.UniqueId.Equals(uniqueId));
             if (matches.Count() == 1) return matches.First();
@@ -175,8 +187,9 @@ namespace RestoLAddition.Data
 
         private async Task GetSampleDataAsync()
         {
-            if (this._bills.Count != 0)
+            if (this.LoadStatus)
                 return;
+            LoadStatus = true;
 
             Uri dataUri = new Uri("ms-appx:///DataModel/SampleData.json");
 
