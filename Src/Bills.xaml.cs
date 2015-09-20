@@ -80,8 +80,6 @@ namespace RestoLAddition
 
             ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
             PriceStringFormatConverter.PriceStrFormat = resourceLoader.GetString("PriceStrFormat");
-
-
         }
 
         /// <summary>

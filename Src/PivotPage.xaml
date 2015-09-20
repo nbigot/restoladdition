@@ -32,7 +32,7 @@
                 x:Name="PivotItem3" 
                 Margin="10,14.5,10,0"
                 Header="L'addition"
-                DataContext="{Binding SecondGroup}"
+                DataContext="{Binding CurrentBill}"
                 d:DataContext="{Binding Bills[1], Source={d:DesignData Source=/DataModel/SampleData.json, Type=data:SampleDataSource}}">
                 <!--Double line list no text wrapping-->
                 <Grid>
@@ -129,7 +129,7 @@
                 x:Uid="PivotItem2"
                 Margin="10,14.5,10,0"
                 Header="La note"
-                DataContext="{Binding SecondGroup}"
+                DataContext="{Binding CurrentBill}"
                 d:DataContext="{Binding Bills[1], Source={d:DesignData Source=/DataModel/SampleData.json, Type=data:SampleDataSource}}">
                 <!--Double line list no text wrapping-->
                 <ListView
@@ -264,7 +264,7 @@
                 x:Uid="PivotItem1"
                 Margin="19,14.5,0,0"
                 Header="Les convives"
-                DataContext="{Binding FirstGroup}"
+                DataContext="{Binding CurrentBill}"
                 d:DataContext="{Binding Bills[0], Source={d:DesignData Source=/DataModel/SampleData.json, Type=data:SampleDataSource}}"
                 CommonNavigationTransitionInfo.IsStaggerElement="True">
                 <!--Double line list with text wrapping-->

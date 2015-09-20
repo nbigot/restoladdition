@@ -27,13 +27,15 @@ namespace RestoLAddition
 {
     public sealed partial class PivotPage : Page
     {
-        private const string FirstGroupName = "FirstGroup";
-        private const string SecondGroupName = "SecondGroup";
-        private const string ThirdGroupName = "SecondGroup";
+        private const string CurrentBill = "CurrentBill";
+        //private const string SecondGroupName = "SecondGroup";
+        //private const string ThirdGroupName = "SecondGroup";
 
         private readonly NavigationHelper navigationHelper;
         private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
         private readonly ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
+
+        private RestaurantBill bill;
 
         public PivotPage()
         {
@@ -77,11 +79,10 @@ namespace RestoLAddition
         private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            //var RestaurantBill = await SampleDataSource.GetBillAsync("Group-1");
+            //var bill = await SampleDataSource.GetBillAsync("Group-1");
 
-            var RestaurantBill = e.NavigationParameter as RestaurantBill;
-
-            this.DefaultViewModel[FirstGroupName] = RestaurantBill;
+            bill = e.NavigationParameter as RestaurantBill;
+            this.DefaultViewModel[CurrentBill] = bill;
 
             ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
             PriceStringFormatConverter.PriceStrFormat = resourceLoader.GetString("PriceStrFormat");
@@ -105,9 +106,9 @@ namespace RestoLAddition
         /// </summary>
         private void AddAppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            string groupName = this.pivot.SelectedIndex == 0 ? FirstGroupName : SecondGroupName;
-            var group = this.DefaultViewModel[groupName] as RestaurantBill;
-            var nextItemId = group.Orders.Count + 1;
+            //string groupName = this.pivot.SelectedIndex == 0 ? CurrentBill : SecondGroupName;
+            //var group = this.DefaultViewModel[groupName] as RestaurantBill;
+            var nextItemId = bill.Orders.Count + 1;
             var newItem = new Order(
                 string.Format(CultureInfo.InvariantCulture, "Group-{0}-Item-{1}", this.pivot.SelectedIndex + 1, nextItemId),
                 string.Format(CultureInfo.CurrentCulture, this.resourceLoader.GetString("NewItemTitle"), nextItemId),
@@ -117,7 +118,7 @@ namespace RestoLAddition
                 string.Empty,
                 0);
 
-            group.Orders.Add(newItem);
+            bill.Orders.Add(newItem);
 
             // Scroll the new item into view.
             var container = this.pivot.ContainerFromIndex(this.pivot.SelectedIndex) as ContentControl;
@@ -144,8 +145,8 @@ namespace RestoLAddition
         /// </summary>
         private async void SecondPivot_Loaded(object sender, RoutedEventArgs e)
         {
-            var RestaurantBill = await SampleDataSource.GetBillAsync("Group-2");
-            this.DefaultViewModel[SecondGroupName] = RestaurantBill;
+            //var RestaurantBill = await SampleDataSource.GetBillAsync("Group-2");
+            //this.DefaultViewModel[SecondGroupName] = RestaurantBill;
         }
 
         /// <summary>
@@ -153,8 +154,8 @@ namespace RestoLAddition
         /// </summary>
         private async void ThirdPivot_Loaded(object sender, RoutedEventArgs e)
         {
-            var RestaurantBill = await SampleDataSource.GetBillAsync("Group-2");
-            this.DefaultViewModel[ThirdGroupName] = RestaurantBill;
+            //var RestaurantBill = await SampleDataSource.GetBillAsync("Group-2");
+            //this.DefaultViewModel[ThirdGroupName] = RestaurantBill;
         }
 
         #region NavigationHelper registration
@@ -211,23 +212,9 @@ namespace RestoLAddition
         private void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
         {
             var menuFlyoutItem = sender as MenuFlyoutItem;
-            if (menuFlyoutItem == null) return;
-            //Debug.WriteLine("youpi :)");
-            //Debug.WriteLine(menuFlyoutItem.DataContext.ToString());
-
-            var item = menuFlyoutItem.DataContext as Order;
+            var item = menuFlyoutItem?.DataContext as Order;
             if (item == null) return;
-
-            //Debug.WriteLine("re youpi :)");
-
-            // HACK : c'est vraiment du code pas propre, ca va que c'est juste pour tester :(
-            // delete item by it's unique id
-            if (this.pivot.SelectedItem == this.PivotItem3)
-            {
-                string groupName = ThirdGroupName;
-                var bill = this.DefaultViewModel[groupName] as RestaurantBill;
-                bill.Orders.Remove(item);
-            }
+            bill.Orders.Remove(item);
         }
     }
 }
