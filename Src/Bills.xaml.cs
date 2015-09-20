@@ -31,6 +31,8 @@ namespace RestoLAddition
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
 
+        private const string BillsGroupName = "BillsGroup";
+
         public Bills()
         {
             this.InitializeComponent();
@@ -57,12 +59,6 @@ namespace RestoLAddition
             get { return this.defaultViewModel; }
         }
 
-        private ObservableCollection<RestaurantBill> defaultViewModel2 = new ObservableCollection<RestaurantBill>();
-        public ObservableCollection<RestaurantBill> DefaultViewModel2
-        {
-            get { return this.defaultViewModel2; }
-        }
-
         /// <summary>
         /// Populates the page with content passed during navigation.  Any saved state is also
         /// provided when recreating a page from a prior session.
@@ -77,8 +73,7 @@ namespace RestoLAddition
         private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
             var bills = await SampleDataSource.GetBillsAsync() as ObservableCollection<RestaurantBill>;
-            //this.DefaultViewModel[FirstGroupName] = RestaurantBill;
-            this.defaultViewModel2 = bills;
+            this.DefaultViewModel[BillsGroupName] = bills;
         }
 
         /// <summary>
