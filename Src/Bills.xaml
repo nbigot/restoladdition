@@ -39,16 +39,16 @@
                     ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Grid x:Name="ItemBill" Margin="0,0,0,15">
+                        <Grid x:Name="ItemBill" Margin="0,0,0,15" Holding="ItemHolding">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition MinWidth="6" />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <FlyoutBase.AttachedFlyout>
-                            <MenuFlyout>
-                                <MenuFlyoutItem Text="Supprimer" x:Uid="DeleteItem" Click="MenuFlyoutItem_Click" />
-                            </MenuFlyout>
-                        </FlyoutBase.AttachedFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="Supprimer" x:Uid="DeleteItem" Click="MenuFlyoutItem_Click" />
+                                </MenuFlyout>
+                            </FlyoutBase.AttachedFlyout>
                             <StackPanel Margin="0" MinWidth="6" MinHeight="10">
                                 <StackPanel.Background>
                                     <SolidColorBrush Color="{StaticResource BleuCiel}"/>

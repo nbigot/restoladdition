@@ -10,6 +10,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
+using Windows.UI.Input;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -124,18 +125,27 @@ namespace RestoLAddition
         {
             var menuFlyoutItem = sender as MenuFlyoutItem;
             if (menuFlyoutItem == null) return;
-            Debug.WriteLine("youpi #1 :)");
-            //Debug.WriteLine(menuFlyoutItem.DataContext.ToString());
-
             var bill = menuFlyoutItem.DataContext as RestaurantBill;
             if (bill == null) return;
-
-            Debug.WriteLine("youpi #2 :)");
-
             var bills = await SampleDataSource.GetBillsAsync() as ObservableCollection<RestaurantBill>;
             bills.Remove(bill);
+        }
 
-            Debug.WriteLine("youpi #3 :)");
+        /// <summary>
+        /// affiche le context menu quand le user hold l'item (bill)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ItemHolding(object sender, HoldingRoutedEventArgs e)
+        {
+            // this event is fired multiple times. We do not want to show the menu twice
+            if (e.HoldingState != HoldingState.Started) return;
+
+            FrameworkElement element = sender as FrameworkElement;
+            if (element == null) return;
+
+            // If the menu was attached properly, we just need to call this handy method
+            FlyoutBase.ShowAttachedFlyout(element);
         }
     }
 }
