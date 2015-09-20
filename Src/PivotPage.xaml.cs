@@ -77,12 +77,14 @@ namespace RestoLAddition
         private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            var RestaurantBill = await SampleDataSource.GetBillAsync("Group-1");
+            //var RestaurantBill = await SampleDataSource.GetBillAsync("Group-1");
+
+            var RestaurantBill = e.NavigationParameter as RestaurantBill;
+
             this.DefaultViewModel[FirstGroupName] = RestaurantBill;
-//Debug.WriteLine("NavigationHelper_LoadState ok : " + RestaurantBill.UniqueId);
+
             ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
             PriceStringFormatConverter.PriceStrFormat = resourceLoader.GetString("PriceStrFormat");
-            //Debug.WriteLine("found price: "+ PriceStringFormatConverter.PriceStrFormat);
         }
 
         /// <summary>

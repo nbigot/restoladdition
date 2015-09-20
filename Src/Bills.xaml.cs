@@ -156,5 +156,11 @@ namespace RestoLAddition
             // If the menu was attached properly, we just need to call this handy method
             FlyoutBase.ShowAttachedFlyout(element);
         }
+
+        private void ItemBill_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            var bill = ((FrameworkElement)sender)?.DataContext as RestaurantBill;
+            Frame.Navigate(typeof(PivotPage), bill);
+        }
     }
 }

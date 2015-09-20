@@ -44,7 +44,7 @@
                     ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Grid x:Name="ItemBill" Margin="0,0,0,15" Holding="ItemHolding">
+                        <Grid x:Name="ItemBill" Margin="0,0,0,15" Holding="ItemHolding" Tapped="ItemBill_Tapped">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition MinWidth="6" />
                                 <ColumnDefinition Width="Auto" />
