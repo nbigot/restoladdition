@@ -170,7 +170,7 @@ namespace RestoLAddition
         {
             var item = this.DefaultViewModel["Item"] as Order;
             var textbox = sender as TextBox;
-            textbox.Text = item.Title;
+            textbox.Text = item.Title;  //TODO: attention ici item peut être null (mais je ne sais pas encore pourquoi :(
         }
 
         private void TextBox_Dish_Price_Loaded(object sender, RoutedEventArgs e)

@@ -124,7 +124,10 @@
     <value>nouvelle note</value>
   </data>
   <data name="Appname.Title" xml:space="preserve">
-    <value>Resto avec les amis</value>
+    <value>Resto avec mes amis</value>
+  </data>
+  <data name="Bills.Text" xml:space="preserve">
+    <value>tous mes restos</value>
   </data>
   <data name="DeleteDishAppBarButton.Label" xml:space="preserve">
     <value>Supprimer</value>
@@ -154,10 +157,10 @@
     <value>Titre de l'item: {0}</value>
   </data>
   <data name="Pivot.Title" xml:space="preserve">
-    <value>Resto avec les amis</value>
+    <value>Resto avec mes amis</value>
   </data>
   <data name="PivotItem1.Header" xml:space="preserve">
-    <value>premier</value>
+    <value>Amis</value>
   </data>
   <data name="PivotItem2.Header" xml:space="preserve">
     <value>La note</value>
