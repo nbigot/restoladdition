@@ -104,6 +104,7 @@
     <Compile Include="Bills.xaml.cs">
       <DependentUpon>Bills.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common\DateStringFormatConverter.cs" />
     <Compile Include="Common\NavigationHelper.cs" />
     <Compile Include="Common\ObservableDictionary.cs" />
     <Compile Include="Common\PriceStringFormatConverter.cs" />

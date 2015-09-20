@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
@@ -31,6 +32,7 @@ namespace RestoLAddition
     {
         private NavigationHelper navigationHelper;
         private ObservableDictionary defaultViewModel = new ObservableDictionary();
+        private readonly ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
 
         private const string BillsGroupName = "BillsGroup";
 
@@ -75,6 +77,11 @@ namespace RestoLAddition
         {
             var bills = await SampleDataSource.GetBillsAsync() as ObservableCollection<RestaurantBill>;
             this.DefaultViewModel[BillsGroupName] = bills;
+
+            ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
+            PriceStringFormatConverter.PriceStrFormat = resourceLoader.GetString("PriceStrFormat");
+
+
         }
 
         /// <summary>

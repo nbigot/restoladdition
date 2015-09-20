@@ -12,6 +12,7 @@ using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using Windows.Devices.Geolocation;
 
 // The data model defined by this file serves as a representative example of a strongly-typed
 // model.  The property names chosen coincide with data bindings in the standard item templates.
@@ -85,9 +86,30 @@ namespace RestoLAddition.Data
     /// <summary>
     /// Une note de restaurant (l'addition, la facture)
     /// </summary>
+    public class Location
+    {
+        public Location(String Longitude, String Latitude)
+        {
+            this.Longitude = Longitude;
+            this.Latitude = Latitude;
+        }
+
+        public Location(double Longitude, double Latitude)
+        {
+            this.Longitude = Longitude.ToString(CultureInfo.InvariantCulture);
+            this.Latitude = Latitude.ToString(CultureInfo.InvariantCulture);
+        }
+
+        public string Longitude { get; private set; }
+        public string Latitude { get; private set; }
+    }
+
+    /// <summary>
+    /// Une note de restaurant (l'addition, la facture)
+    /// </summary>
     public class RestaurantBill
     {
-        public RestaurantBill(String uniqueId, String title, String subtitle, String imagePath, String description, DateTime date)
+        public RestaurantBill(String uniqueId, String title, String subtitle, String imagePath, String description, DateTime date, Location Location)
         {
             this.UniqueId = uniqueId;
             this.Title = title;
@@ -95,6 +117,7 @@ namespace RestoLAddition.Data
             this.Description = description;
             this.ImagePath = imagePath;
             this.Date = date;
+            this.Location = Location;
             this.Orders = new ObservableCollection<Order>();
         }
 
@@ -103,6 +126,7 @@ namespace RestoLAddition.Data
         public string Subtitle { get; private set; }
         public string Description { get; private set; }
         public string ImagePath { get; private set; }
+        public Location Location { get; private set; }
         public DateTime Date { get; private set; }
         public ObservableCollection<Order> Orders { get; private set; }
 
@@ -147,9 +171,54 @@ namespace RestoLAddition.Data
             while (_sampleDataSource.Bills.Any(billIt => billIt.Title == title)) {
                 title = string.Format("Resto {0} ({1})", now.ToString("ddd d MMM", CultureInfo.CurrentCulture), ++i);
             }
-            var bill = new RestaurantBill(newUniqueId, title, "", "", "", now );
+
+            Location location = null;
+            var geoloc = await GetLocation();
+            if (geoloc != null)
+            {
+                Debug.WriteLine("location pos acc: " + geoloc.Coordinate?.Accuracy.ToString() ?? "undefined");
+                Debug.WriteLine("location pos long: " + geoloc.Coordinate?.Point.Position.Longitude.ToString() ?? "undefined");
+                Debug.WriteLine("location pos lat: " + geoloc.Coordinate?.Point.Position.Latitude.ToString() ?? "undefined");
+                location = new Location(geoloc.Coordinate.Point.Position.Longitude, geoloc.Coordinate.Point.Position.Latitude);
+            }
+
+            var bill = new RestaurantBill(newUniqueId, title, "", "", "", now, location);
             _sampleDataSource.Bills.Add(bill);
             return bill;
+        }
+
+        /// <summary>
+        /// https://msdn.microsoft.com/fr-fr/library/windows/apps/jj206956(v=vs.105).aspx
+        /// http://stackoverflow.com/questions/23692120/getting-civicaddress-on-windows-phone-8-1
+        /// </summary>
+        /// <returns>device position geolocalisation</returns>
+        public static async Task<Geoposition> GetLocation()
+        {
+            try
+            {
+                var geolocator = new Geolocator();
+                return await geolocator.GetGeopositionAsync();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Exception in GetSampleDataAsync : " + ex.Message);
+                if ((uint)ex.HResult == 0x80004004)
+                {
+                    // the application does not have the right capability or the location master switch is off
+                    Debug.WriteLine("location is disabled in phone settings.");
+                }
+                return null;
+            }
+
+            //private void watcher_PositionChanged(object sender, GeoPositionChangedEventArgs<GeoCoordinate> e)
+            //{
+            //    //Get position data
+            //    var pos = e.Position.Location;
+            //    //Update mypos object
+            //    mypos.update(pos.Latitude, pos.Longitude);
+            //    //Update data on the main interface
+            //    MainMap.SetView(mypos.getCoordinate(), MainMap.ZoomLevel, MapAnimationKind.Parabolic);
+            //}
         }
 
         public static async Task<IEnumerable<RestaurantBill>> GetBillsAsync()
@@ -216,12 +285,20 @@ namespace RestoLAddition.Data
                         //DateTime.Now.ToString("s")
                     }
 
+                    Location location = null;
+                    if (RestaurantBillObject.ContainsKey("Location"))
+                    {
+                        JsonObject loc = RestaurantBillObject["Location"].GetObject();
+                        location = new Location( loc["Longitude"].GetString(), loc["Latitude"].GetString() );
+                    }
+
                     RestaurantBill bill = new RestaurantBill(RestaurantBillObject["UniqueId"].GetString(),
                                                                 RestaurantBillObject["Title"].GetString(),
                                                                 RestaurantBillObject["Subtitle"].GetString(),
                                                                 RestaurantBillObject["ImagePath"].GetString(),
                                                                 RestaurantBillObject["Description"].GetString(),
-                                                                date
+                                                                date,
+                                                                location
                                                                 );
 
                     foreach (JsonValue OrderValue in RestaurantBillObject["Orders"].GetArray())
