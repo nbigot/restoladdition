@@ -9,7 +9,7 @@
     mc:Ignorable="d"
     DataContext="{Binding DefaultViewModel.Item, RelativeSource={RelativeSource Self}}"
     d:DataContext="{Binding Bills[1].Orders[0], Source={d:DesignData Source=/DataModel/SampleData.json, Type=data:SampleDataSource}}"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="{StaticResource BackgroundBlueGradient3}">
     <Page.Transitions>
         <TransitionCollection>
             <NavigationThemeTransition>

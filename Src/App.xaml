@@ -5,6 +5,18 @@
     xmlns:local="using:RestoLAddition">
     <Application.Resources>
         <Color x:Key="BleuCiel">#FF1BA1E2</Color>
+        <LinearGradientBrush x:Key="BackgroundBlueGradient" x:Name="BackgroundBlueGradient" EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF001430" Offset="0"/>
+            <GradientStop Color="#FF0050C3" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="BackgroundBlueGradient2" x:Name="BackgroundBlueGradient2" EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF001430" Offset="0"/>
+            <GradientStop Color="#FF0050C3" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="BackgroundBlueGradient3" x:Name="BackgroundBlueGradient3" EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="#FF001E2C" Offset="0"/>
+            <GradientStop Color="#FF0088C9" Offset="1"/>
+        </LinearGradientBrush>
     </Application.Resources>
 
 </Application>

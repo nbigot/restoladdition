@@ -7,8 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:RestoLAddition.Data"
     mc:Ignorable="d"
-    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}">
     <Page.Transitions>
         <TransitionCollection>
             <NavigationThemeTransition>
@@ -22,7 +21,10 @@
     <Page.Resources>
         <local:PriceStringFormatConverter x:Name="PriceStringFormat"/>
     </Page.Resources>
-    
+    <Page.Background>
+        <StaticResource ResourceKey="BackgroundBlueGradient3"/>
+    </Page.Background>
+
     <Grid>
         <Pivot x:Uid="Appname" Title="Resto avec les amis" x:Name="pivot" CommonNavigationTransitionInfo.IsStaggerElement="True">
 

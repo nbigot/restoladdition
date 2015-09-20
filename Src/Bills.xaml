@@ -7,13 +7,15 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:RestoLAddition.Data"
     mc:Ignorable="d"
-    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    DataContext="{Binding DefaultViewModel, RelativeSource={RelativeSource Self}}">
 
     <Page.Resources>
         <local:PriceStringFormatConverter x:Key="PriceStringFormatConverter"/>
         <local:DateStringFormatConverter x:Key="DateStringFormatConverter"/>
     </Page.Resources>
+    <Page.Background>
+        <StaticResource ResourceKey="BackgroundBlueGradient3"/>
+    </Page.Background>
 
     <Grid x:Name="LayoutRoot">
 
