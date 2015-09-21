@@ -117,10 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AddAppBarButton.Label" xml:space="preserve">
+  <data name="BarButtonAdd.Label" xml:space="preserve">
     <value>ajouter un plat</value>
   </data>
-  <data name="AddNoteBarButton.Label" xml:space="preserve">
+  <data name="BarButtonAddNote.Label" xml:space="preserve">
     <value>nouvelle note</value>
   </data>
   <data name="Appname.Title" xml:space="preserve">
@@ -182,5 +182,8 @@
   </data>
   <data name="ValidateDishAppBarButton.Label" xml:space="preserve">
     <value>Accepter</value>
+  </data>
+  <data name="BarButtonEdit.Label" xml:space="preserve">
+    <value>éditer</value>
   </data>
 </root>

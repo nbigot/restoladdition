@@ -100,7 +100,7 @@
     </Grid>
     <Page.BottomAppBar>
         <CommandBar>
-            <AppBarButton x:Uid="AddNoteBarButton" x:Name="AddNoteBarButton" Label="nouvelle note" Icon="Add" Click="AddNoteBarButton_Click" />
+            <AppBarButton x:Uid="BarButtonAddNote" x:Name="BarButtonAddNote" Label="nouvelle note" Icon="Add" Click="BarButtonAddNote_Click" />
         </CommandBar>
     </Page.BottomAppBar>
 </Page>

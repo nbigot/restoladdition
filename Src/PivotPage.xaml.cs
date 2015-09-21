@@ -76,7 +76,7 @@ namespace RestoLAddition
         /// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested and
         /// a dictionary of state preserved by this page during an earlier
         /// session. The state will be null the first time a page is visited.</param>
-        private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
+        private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
             // TODO: Create an appropriate data model for your problem domain to replace the sample data
             //var bill = await SampleDataSource.GetBillAsync("Group-1");
@@ -104,7 +104,7 @@ namespace RestoLAddition
         /// <summary>
         /// Adds an item to the list when the app bar button is clicked.
         /// </summary>
-        private void AddAppBarButton_Click(object sender, RoutedEventArgs e)
+        private void BarButtonAdd_Click(object sender, RoutedEventArgs e)
         {
             //string groupName = this.pivot.SelectedIndex == 0 ? CurrentBill : SecondGroupName;
             //var group = this.DefaultViewModel[groupName] as RestaurantBill;
@@ -143,7 +143,7 @@ namespace RestoLAddition
         /// <summary>
         /// Loads the content for the second pivot item when it is scrolled into view.
         /// </summary>
-        private async void SecondPivot_Loaded(object sender, RoutedEventArgs e)
+        private void SecondPivot_Loaded(object sender, RoutedEventArgs e)
         {
             //var RestaurantBill = await SampleDataSource.GetBillAsync("Group-2");
             //this.DefaultViewModel[SecondGroupName] = RestaurantBill;
@@ -152,7 +152,7 @@ namespace RestoLAddition
         /// <summary>
         /// Loads the content for the third pivot item when it is scrolled into view.
         /// </summary>
-        private async void ThirdPivot_Loaded(object sender, RoutedEventArgs e)
+        private void ThirdPivot_Loaded(object sender, RoutedEventArgs e)
         {
             //var RestaurantBill = await SampleDataSource.GetBillAsync("Group-2");
             //this.DefaultViewModel[ThirdGroupName] = RestaurantBill;
@@ -215,6 +215,11 @@ namespace RestoLAddition
             var item = menuFlyoutItem?.DataContext as Order;
             if (item == null) return;
             bill.Orders.Remove(item);
+        }
+
+        private void BarButtonEdit_Click(object sender, RoutedEventArgs e)
+        {
+            //TODO
         }
     }
 }
