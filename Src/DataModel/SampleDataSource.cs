@@ -241,6 +241,8 @@ namespace RestoLAddition.Data
             await _sampleDataSource.GetSampleDataAsync();
             // Simple linear search is acceptable for small data sets
             var matches = _sampleDataSource.Bills.SelectMany(bill => bill.Orders).Where((order) => order.UniqueId.Equals(uniqueId));
+            if (matches.Count() > 1)
+                throw new Exception("invalid data model : multiple occurences found for unique id : " + uniqueId);
             if (matches.Count() == 1) return matches.First();
             return null;
         }
