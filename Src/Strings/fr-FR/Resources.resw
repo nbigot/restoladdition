@@ -186,4 +186,22 @@
   <data name="BarButtonEdit.Label" xml:space="preserve">
     <value>éditer</value>
   </data>
+  <data name="Guest1.Label" xml:space="preserve">
+    <value>Convive n°1</value>
+  </data>
+  <data name="Guest2.Label" xml:space="preserve">
+    <value>Convive n°2</value>
+  </data>
+  <data name="Guest3.Label" xml:space="preserve">
+    <value>Convive n°3</value>
+  </data>
+  <data name="Guest4.Label" xml:space="preserve">
+    <value>Convive n°4</value>
+  </data>
+  <data name="Guest5.Label" xml:space="preserve">
+    <value>Convive n°5</value>
+  </data>
+  <data name="RestaurantName.Label" xml:space="preserve">
+    <value>Nom du restaurant</value>
+  </data>
 </root>

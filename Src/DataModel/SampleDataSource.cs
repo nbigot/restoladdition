@@ -161,16 +161,23 @@ namespace RestoLAddition.Data
             get { return this._bills; }
         }
 
-        public static async Task<RestaurantBill> AddBillAsync()
+        public static async Task<string> GenerateNewDefaultNameForBill()
         {
             await _sampleDataSource.GetSampleDataAsync();
-            var newUniqueId = Guid.NewGuid().ToString();
             var now = DateTime.Now;
             var title = "Resto " + now.ToString("ddd d MMM", CultureInfo.CurrentCulture);
             var i = 0;
-            while (_sampleDataSource.Bills.Any(billIt => billIt.Title == title)) {
+            while (_sampleDataSource.Bills.Any(billIt => billIt.Title == title))
+            {
                 title = string.Format("Resto {0} ({1})", now.ToString("ddd d MMM", CultureInfo.CurrentCulture), ++i);
             }
+
+            return title;
+        }
+
+        public static async Task<RestaurantBill> AddBillAsync(string title)
+        {
+            await _sampleDataSource.GetSampleDataAsync();
 
             Location location = null;
             var geoloc = await GetLocation();
@@ -182,6 +189,8 @@ namespace RestoLAddition.Data
                 location = new Location(geoloc.Coordinate.Point.Position.Longitude, geoloc.Coordinate.Point.Position.Latitude);
             }
 
+            var newUniqueId = Guid.NewGuid().ToString();
+            var now = DateTime.Now;
             var bill = new RestaurantBill(newUniqueId, title, "", "", "", now, location);
             _sampleDataSource.Bills.Add(bill);
             return bill;

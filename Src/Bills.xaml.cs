@@ -123,7 +123,16 @@ namespace RestoLAddition
 
         private async void BarButtonAddNote_Click(object sender, RoutedEventArgs e)
         {
-            await SampleDataSource.AddBillAsync();
+            var defaultTitle = await SampleDataSource.GenerateNewDefaultNameForBill();
+            var dialog = new DialogEditResto(defaultTitle);
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                Debug.WriteLine("ajouter resto");
+
+                var bill = await SampleDataSource.AddBillAsync( "fake" /*dialog.RestaurantName.Text*/ );
+                //Frame.Navigate(typeof(PivotPage), bill);
+            }
         }
 
         private async void MenuFlyoutItem_Click(object sender, RoutedEventArgs e)
