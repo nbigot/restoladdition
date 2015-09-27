@@ -21,7 +21,6 @@ using Windows.Devices.Geolocation;
 // replace it with something appropriate to their needs. If using this model, you might improve app 
 // responsiveness by initiating the data loading task in the code behind for App.xaml when the app 
 // is first launched.
-
 namespace RestoLAddition.Data
 {
     /// <summary>
@@ -119,6 +118,7 @@ namespace RestoLAddition.Data
             this.Date = date;
             this.Location = Location;
             this.Orders = new ObservableCollection<Order>();
+            this.Guests = new ObservableCollection<String>();
         }
 
         public string UniqueId { get; private set; }
@@ -129,12 +129,21 @@ namespace RestoLAddition.Data
         public Location Location { get; private set; }
         public DateTime Date { get; private set; }
         public ObservableCollection<Order> Orders { get; private set; }
+        public ObservableCollection<String> Guests { get; private set; }
 
         public decimal Sum
         {
             get
             {
                 return Orders.Sum(item => item.Price);
+            }
+        }
+
+        public string GuestList
+        {
+            get
+            {
+                return string.Join(", ", Guests);
             }
         }
 
@@ -284,7 +293,8 @@ namespace RestoLAddition.Data
                 {
                     JsonObject RestaurantBillObject = RestaurantBillValue.GetObject();
                     DateTime date = DateTime.Now;
-                    if (RestaurantBillObject.ContainsKey("Date")) {
+                    if (RestaurantBillObject.ContainsKey("Date"))
+                    {
                         // "Date": "/Date(2008-06-15T21:15:07)/",
                         // http://regexlib.com/(X(1)A(plohCQBrb3JPpHX7KcH8auVKuRp8DdGM8wp_WQvQnRkqt078aQ_FHNpu-E3Q15qMcj_h5r_e1sDU99su-W3jeSa4Rg1YPf-sQ2t6j3wMh1hddZDrF4vczWP07PVccTC83u9Xx3nZSy-1p7Y2br4Fi6q9t_ZFiu_CyGmjBW-cH0xS1ybSZ5-oc4Nut3_tlJ_30))/REDetails.aspx?regexp_id=93
                         var r = new Regex(@"(?<grdate>20\d{2}(-|\/)((0[1-9])|(1[0-2]))(-|\/)((0[1-9])|([1-2][0-9])|(3[0-1]))(T|\s)(([0-1][0-9])|(2[0-3])):([0-5][0-9]):([0-5][0-9]))");
@@ -293,24 +303,29 @@ namespace RestoLAddition.Data
                         {
                             date = DateTime.Parse(strDate);
                         }
-                        //DateTime.Now.ToString("s")
                     }
 
                     Location location = null;
                     if (RestaurantBillObject.ContainsKey("Location"))
                     {
                         JsonObject loc = RestaurantBillObject["Location"].GetObject();
-                        location = new Location( loc["Longitude"].GetString(), loc["Latitude"].GetString() );
+                        location = new Location(loc["Longitude"].GetString(), loc["Latitude"].GetString());
                     }
 
-                    RestaurantBill bill = new RestaurantBill(RestaurantBillObject["UniqueId"].GetString(),
-                                                                RestaurantBillObject["Title"].GetString(),
-                                                                RestaurantBillObject["Subtitle"].GetString(),
-                                                                RestaurantBillObject["ImagePath"].GetString(),
-                                                                RestaurantBillObject["Description"].GetString(),
-                                                                date,
-                                                                location
-                                                                );
+                    RestaurantBill bill = new RestaurantBill(
+                        RestaurantBillObject["UniqueId"].GetString(),
+                        RestaurantBillObject["Title"].GetString(),
+                        RestaurantBillObject["Subtitle"].GetString(),
+                        RestaurantBillObject["ImagePath"].GetString(),
+                        RestaurantBillObject["Description"].GetString(),
+                        date,
+                        location
+                    );
+
+                    foreach (JsonValue GuestValue in RestaurantBillObject["Guests"].GetArray())
+                    {
+                        bill.Guests.Add(GuestValue.GetString());
+                    }
 
                     foreach (JsonValue OrderValue in RestaurantBillObject["Orders"].GetArray())
                     {
@@ -320,14 +335,15 @@ namespace RestoLAddition.Data
                             OrderObject.ContainsKey("Price") ? (OrderObject["Price"].GetString()) : "0",
                             NumberStyles.AllowDecimalPoint,
                             CultureInfo.InvariantCulture);
-                        var order = new Order(OrderObject["UniqueId"].GetString(),
-                                                           OrderObject["Title"].GetString(),
-                                                           OrderObject["Subtitle"].GetString(),
-                                                           OrderObject["ImagePath"].GetString(),
-                                                           OrderObject["Description"].GetString(),
-                                                           OrderObject["Content"].GetString(),
-                                                           price
-                                                           );
+                        var order = new Order(
+                            OrderObject["UniqueId"].GetString(),
+                            OrderObject["Title"].GetString(),
+                            OrderObject["Subtitle"].GetString(),
+                            OrderObject["ImagePath"].GetString(),
+                            OrderObject["Description"].GetString(),
+                            OrderObject["Content"].GetString(),
+                            price
+                        );
                         bill.Orders.Add(order);
 
                         if (OrderObject.Keys.Contains("Shares"))

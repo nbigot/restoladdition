@@ -5,6 +5,7 @@
     "Subtitle": "Group subtitle: 1",
     "ImagePath": "Assets/DarkGray.png",
     "Description": "Group Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tempor scelerisque lorem in vehicula. Aliquam tincidunt, lacus ut sagittis tristique, turpis massa volutpat augue, eu rutrum ligula ante a ante",
+    "Guests": [],
     "Orders": [
       {
         "UniqueId": "Group-1-Item-1",
@@ -55,7 +56,11 @@
     "ImagePath": "Assets/LightGray.png",
     "Description": "c'était un super resto",
     "Date": "/Date(2008-06-15T21:15:07)/",
-    "Location": { "Longitude": "2.35332973517766", "Latitude": "48.830638032445" },
+    "Location": {
+      "Longitude": "2.35332973517766",
+      "Latitude": "48.830638032445"
+    },
+    "Guests": ["Nico", "Xav", "Dodo"],
     "Orders": [
       {
         "UniqueId": "Group-2-Item-1",
