@@ -205,6 +205,15 @@ namespace RestoLAddition.Data
             return bill;
         }
 
+        public static async Task<bool> DeleteBillAsync(string uniqueId)
+        {
+            await _sampleDataSource.GetSampleDataAsync();
+
+            return _sampleDataSource.Bills.Remove(
+                _sampleDataSource.Bills.First( b => b.UniqueId == uniqueId)
+            );
+        }
+
         /// <summary>
         /// https://msdn.microsoft.com/fr-fr/library/windows/apps/jj206956(v=vs.105).aspx
         /// http://stackoverflow.com/questions/23692120/getting-civicaddress-on-windows-phone-8-1

@@ -13,6 +13,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
 using Windows.UI.Input;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -122,6 +123,7 @@ namespace RestoLAddition
 
             // Scroll the new item into view.
             var container = this.pivot.ContainerFromIndex(this.pivot.SelectedIndex) as ContentControl;
+// attention bug: container.ContentTemplateRoot est null si je clique sur (+) depuis la page de plats!!!
             var listView = container.ContentTemplateRoot as ListView;
             listView.ScrollIntoView(newItem, ScrollIntoViewAlignment.Leading);
         }
@@ -220,6 +222,45 @@ namespace RestoLAddition
         private void BarButtonEdit_Click(object sender, RoutedEventArgs e)
         {
             //TODO
+        }
+
+        private async void BarButtonDelete_Click(object sender, RoutedEventArgs e)
+        {
+            // Create the message dialog and set its content
+            var messageDialog = new MessageDialog(this.resourceLoader.GetString("DialogTitleDeleteThisBill"));    // "Supprimer cette note de restaurant?"
+            
+            // Add commands and set their callbacks; both buttons use the same callback function instead of inline event handlers
+            messageDialog.Commands.Add(new UICommand(
+                this.resourceLoader.GetString("BtnDelete"),  // "Supprimer"
+                new UICommandInvokedHandler(this.CommandInvokedHandler),
+                1));
+            messageDialog.Commands.Add(new UICommand(
+                this.resourceLoader.GetString("BtnCancel"),  // "Annuler"
+                new UICommandInvokedHandler(this.CommandInvokedHandler),
+                0));
+
+            // Set the command that will be invoked by default
+            messageDialog.DefaultCommandIndex = 1;
+
+            // Set the command to be invoked when escape is pressed
+            messageDialog.CancelCommandIndex = 1;
+
+            // Show the message dialog
+            var result = await messageDialog.ShowAsync();
+            if ((int)result.Id == 1)
+            {
+                // delete this bill and navigate to main page
+                var oldBill = bill;
+                this.DefaultViewModel[CurrentBill] = null;
+                bill = null;
+                await SampleDataSource.DeleteBillAsync(oldBill.UniqueId);
+
+                this.navigationHelper.GoBack();
+            }
+        }
+
+        private void CommandInvokedHandler(IUICommand command)
+        {
         }
     }
 }

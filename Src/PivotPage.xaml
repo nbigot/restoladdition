@@ -303,6 +303,7 @@
 
     <Page.BottomAppBar>
         <CommandBar>
+            <AppBarButton x:Uid="BarButtonDelete" x:Name="BarButtonDelete" Label="supprimer l'addition" Icon="Delete" Click="BarButtonDelete_Click" />
             <AppBarButton x:Uid="BarButtonAdd" x:Name="BarButtonAdd" Label="ajouter un plat" Icon="Add" Click="BarButtonAdd_Click" />
             <AppBarButton x:Uid="BarButtonEdit" x:Name="BarButtonEdit" Label="éditer" Icon="Edit" Click="BarButtonEdit_Click" />
             <!--<CommandBar.SecondaryCommands>

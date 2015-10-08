@@ -204,4 +204,13 @@
   <data name="RestaurantName.Label" xml:space="preserve">
     <value>Restaurant name</value>
   </data>
+  <data name="BtnCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="BtnDelete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="DialogTitleDeleteThisBill" xml:space="preserve">
+    <value>Delete this bill?</value>
+  </data>
 </root>
