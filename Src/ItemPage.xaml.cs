@@ -8,9 +8,11 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.ApplicationModel.Resources;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Graphics.Display;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -28,8 +30,10 @@ namespace RestoLAddition
     /// </summary>
     public sealed partial class ItemPage : Page
     {
+        private const string OrderKey = "ItemOrder";
         private readonly NavigationHelper navigationHelper;
         private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
+        private readonly ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
 
         public ItemPage()
         {
@@ -70,9 +74,8 @@ namespace RestoLAddition
         /// session.  The state will be null the first time a page is visited.</param>
         private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            // TODO: Create an appropriate data model for your problem domain to replace the sample data.
             var item = await SampleDataSource.GetOrderAsync((string)e.NavigationParameter);
-            this.DefaultViewModel["Item"] = item;
+            this.DefaultViewModel[OrderKey] = item;
         }
 
         /// <summary>
@@ -115,20 +118,54 @@ namespace RestoLAddition
 
         #endregion
 
-        private void DeleteDishAppBarButton_Click(object sender, RoutedEventArgs e)
+        private async void DeleteDishAppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO
-            this.navigationHelper.GoBack();
+            // Create the message dialog and set its content
+            var messageDialog = new MessageDialog(this.resourceLoader.GetString("DialogTitleDeleteThisDish"));    // "Supprimer ce plat?"
+
+            // Add commands and set their callbacks; both buttons use the same callback function instead of inline event handlers
+            messageDialog.Commands.Add(new UICommand(
+                this.resourceLoader.GetString("BtnDelete"),  // "Supprimer"
+                new UICommandInvokedHandler(this.CommandInvokedHandler),
+                1));
+            messageDialog.Commands.Add(new UICommand(
+                this.resourceLoader.GetString("BtnCancel"),  // "Annuler"
+                new UICommandInvokedHandler(this.CommandInvokedHandler),
+                0));
+
+            // Set the command that will be invoked by default
+            messageDialog.DefaultCommandIndex = 1;
+
+            // Set the command to be invoked when escape is pressed
+            messageDialog.CancelCommandIndex = 1;
+
+            // Show the message dialog
+            var result = await messageDialog.ShowAsync();
+            if ((int)result.Id == 1)
+            {
+                // delete this dish and navigate to main page
+                var itemOrder = this.DefaultViewModel[OrderKey] as Order;
+                /*var oldDis = bill;
+                this.DefaultViewModel[CurrentBill] = null;
+                bill = null;
+                await SampleDataSource.DeleteBillAsync(oldBill.UniqueId);*/
+
+                this.navigationHelper.GoBack();
+            }
+        }
+
+        private void CommandInvokedHandler(IUICommand command)
+        {
         }
 
         private void ValidateDishAppBarButton_Click(object sender, RoutedEventArgs e)
         {
             //TODO : save changes
-            var item = this.DefaultViewModel["Item"] as Order;
+            var itemOrder = this.DefaultViewModel[OrderKey] as Order;
             var TBIDishName = FindName("TBIDishName") as TextBox;
-            if (TBIDishName.Text != item.Title)
+            if (TBIDishName.Text != itemOrder.Title)
             {
-                Debug.WriteLine("change dish name from: " + item.Title + " to: " + TBIDishName.Text);
+                Debug.WriteLine("change dish name from: " + itemOrder.Title + " to: " + TBIDishName.Text);
                 //RestaurantBill group;
                 //var group = await SampleDataSource.GetGroupOfItemAsync(item.UniqueId);
                 //group.Items.SetItem(456, item);
@@ -168,18 +205,18 @@ namespace RestoLAddition
 
         private void TextBox_Dish_Name_Loaded(object sender, RoutedEventArgs e)
         {
-            var item = this.DefaultViewModel["Item"] as Order;
+            var itemOrder = this.DefaultViewModel[OrderKey] as Order;
             var textbox = sender as TextBox;
-            textbox.Text = item.Title;
+            textbox.Text = itemOrder.Title;
         }
 
         private void TextBox_Dish_Price_Loaded(object sender, RoutedEventArgs e)
         {
-            var item = this.DefaultViewModel["Item"] as Order;
+            var itemOrder = this.DefaultViewModel[OrderKey] as Order;
             //Debug.WriteLine("price: "+ item.Price);
             var textbox = sender as TextBox;
             //textbox.Text = item.Price.ToString("0:0.##");
-            textbox.Text = item.Price.ToString("F");
+            textbox.Text = itemOrder.Price.ToString("F");
         }
     }
 }

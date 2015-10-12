@@ -7,7 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    DataContext="{Binding DefaultViewModel.Item, RelativeSource={RelativeSource Self}}"
+    DataContext="{Binding DefaultViewModel.ItemOrder, RelativeSource={RelativeSource Self}}"
     d:DataContext="{Binding Bills[1].Orders[0], Source={d:DesignData Source=/DataModel/SampleData.json, Type=data:SampleDataSource}}"
     Background="{StaticResource BackgroundBlueGradient3}">
     <Page.Transitions>
@@ -46,7 +46,7 @@
                 <TextBlock x:Uid="DishName" Text="Nom du plat" FontSize="22" />
                 <TextBox x:Name="TBIDishName" Loaded="TextBox_Dish_Name_Loaded" />
                 <TextBlock x:Uid="DishPrice" Text="Prix" Margin="0,20,0,0" FontSize="22" />
-                <TextBox x:Name="TBIDishPrice" InputScope="Number" Loaded="TextBox_Dish_Price_Loaded" />
+                <TextBox x:Name="TBIDishPrice" InputScope="Number" Loaded="TextBox_Dish_Price_Loaded" TextAlignment="Right" />
             </StackPanel>
         </Grid>
     </Grid>

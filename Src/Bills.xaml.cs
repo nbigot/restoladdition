@@ -128,9 +128,10 @@ namespace RestoLAddition
             var result = await dialog.ShowAsync();
             if (result == ContentDialogResult.Primary)
             {
-                Debug.WriteLine("ajouter resto");
-
-                var bill = await SampleDataSource.AddBillAsync( "fake" /*dialog.RestaurantName.Text*/ );
+                var bill = await SampleDataSource.AddBillAsync( 
+                    dialog.RestaurantTitle,
+                    dialog.GetGuests()
+                );
                 //Frame.Navigate(typeof(PivotPage), bill);
             }
         }

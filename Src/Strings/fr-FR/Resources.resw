@@ -213,4 +213,7 @@
   <data name="DialogTitleDeleteThisBill" xml:space="preserve">
     <value>Supprimer cette note de restaurant?</value>
   </data>
+  <data name="DialogTitleDeleteThisDish" xml:space="preserve">
+    <value>Supprimer ce plat?</value>
+  </data>
 </root>

@@ -108,7 +108,7 @@ namespace RestoLAddition.Data
     /// </summary>
     public class RestaurantBill
     {
-        public RestaurantBill(String uniqueId, String title, String subtitle, String imagePath, String description, DateTime date, Location Location)
+        public RestaurantBill(String uniqueId, String title, String subtitle, String imagePath, String description, DateTime date, Location Location, IEnumerable<string> Guests)
         {
             this.UniqueId = uniqueId;
             this.Title = title;
@@ -118,7 +118,7 @@ namespace RestoLAddition.Data
             this.Date = date;
             this.Location = Location;
             this.Orders = new ObservableCollection<Order>();
-            this.Guests = new ObservableCollection<String>();
+            this.Guests = new ObservableCollection<String>(Guests);
         }
 
         public string UniqueId { get; private set; }
@@ -144,6 +144,15 @@ namespace RestoLAddition.Data
             get
             {
                 return string.Join(", ", Guests);
+            }
+        }
+
+        public void RebuildGuestListFromOrders()
+        {
+            Guests.Clear();
+            foreach (var guest in Orders.SelectMany(o => o.Shares).Select(o => o.Person).Distinct().OrderBy(o => o))
+            {
+                Guests.Add(guest);
             }
         }
 
@@ -184,7 +193,7 @@ namespace RestoLAddition.Data
             return title;
         }
 
-        public static async Task<RestaurantBill> AddBillAsync(string title)
+        public static async Task<RestaurantBill> AddBillAsync(string title, List<string> guests)
         {
             await _sampleDataSource.GetSampleDataAsync();
 
@@ -200,7 +209,7 @@ namespace RestoLAddition.Data
 
             var newUniqueId = Guid.NewGuid().ToString();
             var now = DateTime.Now;
-            var bill = new RestaurantBill(newUniqueId, title, "", "", "", now, location);
+            var bill = new RestaurantBill(newUniqueId, title, "", "", "", now, location, guests);
             _sampleDataSource.Bills.Add(bill);
             return bill;
         }
@@ -328,7 +337,8 @@ namespace RestoLAddition.Data
                         RestaurantBillObject["ImagePath"].GetString(),
                         RestaurantBillObject["Description"].GetString(),
                         date,
-                        location
+                        location,
+                        new List<string>()
                     );
 
                     foreach (JsonValue GuestValue in RestaurantBillObject["Guests"].GetArray())
@@ -374,6 +384,7 @@ namespace RestoLAddition.Data
                             }
                         }
                     }
+                    bill.RebuildGuestListFromOrders();
                     this.Bills.Add(bill);
                 }
             }

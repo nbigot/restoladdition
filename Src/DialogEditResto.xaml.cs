@@ -25,6 +25,8 @@ namespace RestoLAddition
         private string _title;
         private RestaurantBill _bill;
 
+        public string RestaurantTitle { get { return _title; } }
+
         public DialogEditResto(string defaultTitle)
         {
             _title = defaultTitle;
