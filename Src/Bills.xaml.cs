@@ -130,7 +130,7 @@ namespace RestoLAddition
             {
                 var bill = await SampleDataSource.AddBillAsync( 
                     dialog.RestaurantTitle,
-                    dialog.GetGuests()
+                    dialog.GetGuestsNames()
                 );
                 //Frame.Navigate(typeof(PivotPage), bill);
             }

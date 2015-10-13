@@ -221,21 +221,65 @@
                     ContinuumNavigationTransitionInfo.ExitElementContainer="True">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Margin="0,0,0,9.5">
-                                <TextBlock
-                                    Text="{Binding Title}"
-                                    TextWrapping="Wrap"
-                                    Pivot.SlideInAnimationGroup="1"
-                                    CommonNavigationTransitionInfo.IsStaggerElement="True"
-                                    Style="{ThemeResource ListViewItemTextBlockStyle}"
-                                    Margin="0,0,19,0"/>
-                                <TextBlock
-                                    Text="{Binding Description}"
-                                    TextWrapping="WrapWholeWords"
-                                    Pivot.SlideInAnimationGroup="2" 
-                                    CommonNavigationTransitionInfo.IsStaggerElement="True" 
-                                    Style="{ThemeResource ListViewItemContentTextBlockStyle}"
-                                    Margin="0,0,19,0"/>
+                            <StackPanel Margin="0,0,0,20">
+                                <StackPanel.Background>
+                                    <SolidColorBrush Color="{StaticResource BleuCiel}"/>
+                                </StackPanel.Background>
+                                <StackPanel Margin="22,5,22,10" >
+                                    <StackPanel Margin="0,0,0,10">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock
+                                                Text="{Binding Title}"
+                                                Pivot.SlideInAnimationGroup="1"
+                                                CommonNavigationTransitionInfo.IsStaggerElement="True"
+                                                Style="{ThemeResource ListViewItemTextBlockStyle}" Width="999"/>
+                                            <TextBlock
+                                                Grid.Column="1"
+                                                Text="{Binding Path=Price, Converter={StaticResource ResourceKey=PriceStringFormat}, ConverterParameter=' {0:C}'}"
+                                                TextWrapping="Wrap"
+                                                Pivot.SlideInAnimationGroup="1"
+                                                CommonNavigationTransitionInfo.IsStaggerElement="True"
+                                                Style="{StaticResource ListViewItemTextBlockStyle}" 
+                                                TextAlignment="Right" 
+                                                HorizontalAlignment="Right"/>
+                                        </Grid>
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <!-- list of dishes for the guest -->
+                                        <ListView
+                                            ItemsSource="{Binding Shares}"
+                                            ContinuumNavigationTransitionInfo.ExitElementContainer="True">
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="{Binding Guest}"
+                                                            Pivot.SlideInAnimationGroup="3"
+                                                            CommonNavigationTransitionInfo.IsStaggerElement="True"
+                                                            Style="{StaticResource ListViewItemContentTextBlockStyle}"
+                                                            Width="999"
+                                                            TextWrapping="Wrap" Margin="20,0,0,0"/>
+                                                        <TextBlock 
+                                                            Grid.Column="1"
+                                                            Text="{Binding Path=Price, Converter={StaticResource ResourceKey=PriceStringFormat}, ConverterParameter=' {0:C}'}"
+                                                            Pivot.SlideInAnimationGroup="3"
+                                                            CommonNavigationTransitionInfo.IsStaggerElement="True"
+                                                            Style="{StaticResource ListViewItemContentTextBlockStyle}"
+                                                            TextWrapping="Wrap"
+                                                            HorizontalAlignment="Right"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+                                    </StackPanel>
+                                </StackPanel>
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
