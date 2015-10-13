@@ -159,13 +159,13 @@
   <data name="Pivot.Title" xml:space="preserve">
     <value>Resto avec mes amis</value>
   </data>
-  <data name="PivotItem1.Header" xml:space="preserve">
-    <value>Amis</value>
+  <data name="PivotItemGuestsSubsetDishes.Header" xml:space="preserve">
+    <value>Les convives</value>
   </data>
-  <data name="PivotItem2.Header" xml:space="preserve">
+  <data name="PivotItemDishesSubsetGuest.Header" xml:space="preserve">
     <value>La note</value>
   </data>
-  <data name="PivotItem3.Header" xml:space="preserve">
+  <data name="PivotItemDishes.Header" xml:space="preserve">
     <value>L'addition</value>
   </data>
   <data name="PriceStrFormat" xml:space="preserve">

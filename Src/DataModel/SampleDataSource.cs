@@ -28,16 +28,16 @@ namespace RestoLAddition.Data
     /// </summary>
     public class OrderShare
     {
-        public OrderShare(String person, Decimal price)
+        public OrderShare(String guest, Decimal price)
         {
-            this.Person = person;
+            this.Guest = guest;
             this.Price = price;
         }
 
         /// <summary>
         /// nom de la personne
         /// </summary>
-        public string Person { get; private set; }
+        public string Guest { get; private set; }
 
         /// <summary>
         /// prix que la personne doit payer
@@ -150,7 +150,7 @@ namespace RestoLAddition.Data
         public void RebuildGuestListFromOrders()
         {
             Guests.Clear();
-            foreach (var guest in Orders.SelectMany(o => o.Shares).Select(o => o.Person).Distinct().OrderBy(o => o))
+            foreach (var guest in Orders.SelectMany(o => o.Shares).Select(o => o.Guest).Distinct().OrderBy(o => o))
             {
                 Guests.Add(guest);
             }
@@ -377,7 +377,7 @@ namespace RestoLAddition.Data
                                     CultureInfo.InvariantCulture);
                                 order.Shares.Add(
                                     new OrderShare(
-                                        OrderShareObject["Person"].GetString(),
+                                        OrderShareObject["Guest"].GetString(),
                                         sharePrice
                                     )
                                 );

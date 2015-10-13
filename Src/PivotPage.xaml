@@ -28,14 +28,14 @@
     <Grid>
         <Pivot x:Uid="Appname" Title="Resto avec les amis" x:Name="pivot" CommonNavigationTransitionInfo.IsStaggerElement="True">
 
-            <!--Pivot item three-->
+            <!--List of dishes-->
             <PivotItem
-                x:Uid="PivotItem3"
-                x:Name="PivotItem3" 
+                x:Uid="PivotItemDishes"
+                x:Name="PivotItemDishes" 
                 Margin="10,14.5,10,0"
                 Header="L'addition"
                 DataContext="{Binding CurrentBill}"
-                d:DataContext="{Binding Bills[1], Source={d:DesignData Source=/DataModel/SampleData.json, Type=data:SampleDataSource}}">
+                d:DataContext="{Binding Bills[0], Source={d:DesignData Source=/DataModel/SampleData.json, Type=data:SampleDataSource}}">
                 <!--Double line list no text wrapping-->
                 <Grid>
                     <Grid.RowDefinitions>
@@ -99,24 +99,24 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <TextBlock
-                                                    x:Uid="Total"
-                                                    Text="Total :"
-                                                    Pivot.SlideInAnimationGroup="1"
-                                                    CommonNavigationTransitionInfo.IsStaggerElement="True"
-                                                    Style="{ThemeResource ListViewItemTextBlockStyle}" Width="999" FontSize="48">
+                                x:Uid="Total"
+                                Text="Total :"
+                                Pivot.SlideInAnimationGroup="1"
+                                CommonNavigationTransitionInfo.IsStaggerElement="True"
+                                Style="{ThemeResource ListViewItemTextBlockStyle}" Width="999" FontSize="48">
                                 <TextBlock.Foreground>
                                     <SolidColorBrush Color="{StaticResource BleuCiel}"/>
                                 </TextBlock.Foreground>
                             </TextBlock>
                             <TextBlock
-                                                    Grid.Column="1"
-                                                    Text="{Binding Sum, Mode=OneWay, Converter={StaticResource ResourceKey=PriceStringFormat}, ConverterParameter=' {0:C}'}"
-                                                    TextWrapping="Wrap"
-                                                    Pivot.SlideInAnimationGroup="1"
-                                                    CommonNavigationTransitionInfo.IsStaggerElement="True"
-                                                    Style="{StaticResource ListViewItemTextBlockStyle}" 
-                                                    TextAlignment="Right" 
-                                                    HorizontalAlignment="Right" FontSize="48">
+                                Grid.Column="1"
+                                Text="{Binding Sum, Mode=OneWay, Converter={StaticResource ResourceKey=PriceStringFormat}, ConverterParameter=' {0:C}'}"
+                                TextWrapping="Wrap"
+                                Pivot.SlideInAnimationGroup="1"
+                                CommonNavigationTransitionInfo.IsStaggerElement="True"
+                                Style="{StaticResource ListViewItemTextBlockStyle}" 
+                                TextAlignment="Right" 
+                                HorizontalAlignment="Right" FontSize="48">
                                 <TextBlock.Foreground>
                                     <SolidColorBrush Color="#FF1BA1E2"/>
                                 </TextBlock.Foreground>
@@ -126,14 +126,13 @@
                 </Grid>
             </PivotItem>
 
-            <!--Pivot item two-->
+            <!--List of dishes with subset by guest-->
             <PivotItem
-                x:Uid="PivotItem2"
+                x:Uid="PivotItemDishesSubsetGuest"
                 Margin="10,14.5,10,0"
-                Header="La note"
+                Header="Les plats"
                 DataContext="{Binding CurrentBill}"
-                d:DataContext="{Binding Bills[1], Source={d:DesignData Source=/DataModel/SampleData.json, Type=data:SampleDataSource}}">
-                <!--Double line list no text wrapping-->
+                d:DataContext="{Binding Bills[0], Source={d:DesignData Source=/DataModel/SampleData.json, Type=data:SampleDataSource}}">
                 <ListView
                     ItemsSource="{Binding Orders}"
                     IsItemClickEnabled="True"
@@ -169,9 +168,7 @@
                                                 HorizontalAlignment="Right"/>
                                         </Grid>
                                     </StackPanel>
-
                                     <StackPanel>
-
                                         <!-- part que doit payer chaque personne -->
                                         <ListView
                                             ItemsSource="{Binding Shares}"
@@ -183,7 +180,7 @@
                                                             <ColumnDefinition />
                                                             <ColumnDefinition Width="Auto" />
                                                         </Grid.ColumnDefinitions>
-                                                        <TextBlock Text="{Binding Person}"
+                                                        <TextBlock Text="{Binding Guest}"
                                                             Pivot.SlideInAnimationGroup="3"
                                                             CommonNavigationTransitionInfo.IsStaggerElement="True"
                                                             Style="{StaticResource ListViewItemContentTextBlockStyle}"
@@ -201,58 +198,6 @@
                                                 </DataTemplate>
                                             </ListView.ItemTemplate>
                                         </ListView>
-
-                                        <!--<Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition />
-                                                <ColumnDefinition Width="Auto" />
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Text="Nico"
-                                              Pivot.SlideInAnimationGroup="3"
-                                              CommonNavigationTransitionInfo.IsStaggerElement="True"
-                                              Style="{StaticResource ListViewItemContentTextBlockStyle}"
-                                              TextWrapping="Wrap"/>
-                                            <TextBlock Text="5,50 €" Grid.Column="1"
-                                              Pivot.SlideInAnimationGroup="3"
-                                              CommonNavigationTransitionInfo.IsStaggerElement="True"
-                                              Style="{StaticResource ListViewItemContentTextBlockStyle}"
-                                              TextWrapping="Wrap"
-                                              HorizontalAlignment="Right"/>
-                                        </Grid>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition />
-                                                <ColumnDefinition />
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Text="Dodo"
-                                              Pivot.SlideInAnimationGroup="3"
-                                              CommonNavigationTransitionInfo.IsStaggerElement="True"
-                                              Style="{StaticResource ListViewItemContentTextBlockStyle}"
-                                              TextWrapping="Wrap"/>
-                                            <TextBlock Text="18,70 €" Grid.Column="1"
-                                              Pivot.SlideInAnimationGroup="3"
-                                              CommonNavigationTransitionInfo.IsStaggerElement="True"
-                                              Style="{StaticResource ListViewItemContentTextBlockStyle}"
-                                              TextWrapping="Wrap"
-                                              HorizontalAlignment="Right"/>
-                                        </Grid>
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition />
-                                                <ColumnDefinition />
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Text="Xav"
-                                              Pivot.SlideInAnimationGroup="3"
-                                              CommonNavigationTransitionInfo.IsStaggerElement="True"
-                                              Style="{StaticResource ListViewItemContentTextBlockStyle}"
-                                              TextWrapping="Wrap"/>
-                                            <TextBlock Text="2,00 €" Grid.Column="1"
-                                              Pivot.SlideInAnimationGroup="3"
-                                              CommonNavigationTransitionInfo.IsStaggerElement="True"
-                                              Style="{StaticResource ListViewItemContentTextBlockStyle}"
-                                              TextWrapping="Wrap"
-                                              HorizontalAlignment="Right"/>
-                                        </Grid>-->
                                     </StackPanel>
                                 </StackPanel>
                             </StackPanel>
@@ -261,15 +206,14 @@
                 </ListView>
             </PivotItem>
 
-            <!--Pivot item one-->
+            <!--List of guest subset by dishes-->
             <PivotItem
-                x:Uid="PivotItem1"
-                Margin="19,14.5,0,0"
+                x:Uid="PivotItemGuestsSubsetDishes"
+                Margin="10,14.5,10,0"
                 Header="Les convives"
                 DataContext="{Binding CurrentBill}"
                 d:DataContext="{Binding Bills[0], Source={d:DesignData Source=/DataModel/SampleData.json, Type=data:SampleDataSource}}"
                 CommonNavigationTransitionInfo.IsStaggerElement="True">
-                <!--Double line list with text wrapping-->
                 <ListView
                     ItemsSource="{Binding Orders}"
                     IsItemClickEnabled="True"
@@ -306,10 +250,6 @@
             <AppBarButton x:Uid="BarButtonDelete" x:Name="BarButtonDelete" Label="supprimer l'addition" Icon="Delete" Click="BarButtonDelete_Click" />
             <AppBarButton x:Uid="BarButtonAdd" x:Name="BarButtonAdd" Label="ajouter un plat" Icon="Add" Click="BarButtonAdd_Click" />
             <AppBarButton x:Uid="BarButtonEdit" x:Name="BarButtonEdit" Label="éditer" Icon="Edit" Click="BarButtonEdit_Click" />
-            <!--<CommandBar.SecondaryCommands>
-                <AppBarButton x:Uid="SecondaryButton1" x:Name="SecondaryButton1" Label="nouvelle note" />
-                <AppBarButton x:Uid="SecondaryButton2" x:Name="SecondaryButton2" Label="secondary command 2" />
-            </CommandBar.SecondaryCommands>-->
         </CommandBar>
     </Page.BottomAppBar>
 </Page>
