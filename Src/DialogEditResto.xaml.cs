@@ -46,14 +46,14 @@ namespace RestoLAddition
             // validate button
             if (_bill != null)
             {
-                var guestsNames = GetGuests();
+                var guestsNames = GetGuestsNames();
                 // TODO: update bill there...
                 //var sortedGuests = _bill.Guests.ToList();
                 //sortedGuests.Sort();
             }
         }
 
-        public List<string> GetGuests()
+        public List<string> GetGuestsNames()
         {
             var guestsNames = new List<string>(
                 new string[] { this.Guest1.Text, this.Guest2.Text, this.Guest3.Text, this.Guest4.Text, this.Guest5.Text }

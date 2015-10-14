@@ -22,22 +22,52 @@ using Windows.Devices.Geolocation;
 // responsiveness by initiating the data loading task in the code behind for App.xaml when the app 
 // is first launched.
 namespace RestoLAddition.Data
-{
+{/*
     /// <summary>
-    /// part d'une commande pour un individu
+    /// un convive
     /// </summary>
-    public class OrderShare
+    public class Guest
     {
-        public OrderShare(String person, Decimal price)
+        public Guest(string name)
         {
-            this.Person = person;
-            this.Price = price;
+            this.Name = name;
         }
 
         /// <summary>
-        /// nom de la personne
+        /// guest name
         /// </summary>
-        public string Person { get; private set; }
+        public string Name { get; set; }
+
+        public override string ToString()
+        {
+            return Name;
+        }
+    }
+*/
+    /// <summary>
+    /// part d'une commande pour un convive
+    /// </summary>
+    public class OrderShare
+    {
+        public OrderShare(string guest, Decimal price)
+        {
+            /* HACK!!!! */
+            //this.Guest = new Guest(guest);
+            this.Guest = guest;
+            this.Price = price;
+        }
+
+        /*public OrderShare(Guest guest, Decimal price)
+        {
+            this.Guest = guest.Name;
+            this.Price = price;
+        }*/
+
+        /// <summary>
+        /// le convive
+        /// </summary>
+        //public Guest Guest { get; set; }
+        public string Guest { get; private set; }
 
         /// <summary>
         /// prix que la personne doit payer
@@ -108,7 +138,7 @@ namespace RestoLAddition.Data
     /// </summary>
     public class RestaurantBill
     {
-        public RestaurantBill(String uniqueId, String title, String subtitle, String imagePath, String description, DateTime date, Location Location, IEnumerable<string> Guests)
+        public RestaurantBill(String uniqueId, String title, String subtitle, String imagePath, String description, DateTime date, Location Location)
         {
             this.UniqueId = uniqueId;
             this.Title = title;
@@ -118,7 +148,8 @@ namespace RestoLAddition.Data
             this.Date = date;
             this.Location = Location;
             this.Orders = new ObservableCollection<Order>();
-            this.Guests = new ObservableCollection<String>(Guests);
+            //this.Guests = new ObservableCollection<Guest>();
+            this.Guests = new ObservableCollection<string>();
         }
 
         public string UniqueId { get; private set; }
@@ -129,7 +160,8 @@ namespace RestoLAddition.Data
         public Location Location { get; private set; }
         public DateTime Date { get; private set; }
         public ObservableCollection<Order> Orders { get; private set; }
-        public ObservableCollection<String> Guests { get; private set; }
+        //public ObservableCollection<Guest> Guests { get; private set; }
+        public ObservableCollection<string> Guests { get; private set; }
 
         public decimal Sum
         {
@@ -147,13 +179,10 @@ namespace RestoLAddition.Data
             }
         }
 
-        public void RebuildGuestListFromOrders()
+        public void AddGuest(string name)
         {
-            Guests.Clear();
-            foreach (var guest in Orders.SelectMany(o => o.Shares).Select(o => o.Person).Distinct().OrderBy(o => o))
-            {
-                Guests.Add(guest);
-            }
+            //Guests.Add(new Guest(name));
+            Guests.Add(name);
         }
 
         public override string ToString()
@@ -209,7 +238,11 @@ namespace RestoLAddition.Data
 
             var newUniqueId = Guid.NewGuid().ToString();
             var now = DateTime.Now;
-            var bill = new RestaurantBill(newUniqueId, title, "", "", "", now, location, guests);
+            var bill = new RestaurantBill(newUniqueId, title, "", "", "", now, location);
+            foreach (var guest in guests)
+            {
+                bill.AddGuest(guest);
+            }
             _sampleDataSource.Bills.Add(bill);
             return bill;
         }
@@ -337,13 +370,12 @@ namespace RestoLAddition.Data
                         RestaurantBillObject["ImagePath"].GetString(),
                         RestaurantBillObject["Description"].GetString(),
                         date,
-                        location,
-                        new List<string>()
+                        location
                     );
 
                     foreach (JsonValue GuestValue in RestaurantBillObject["Guests"].GetArray())
                     {
-                        bill.Guests.Add(GuestValue.GetString());
+                        bill.AddGuest(GuestValue.GetString());
                     }
 
                     foreach (JsonValue OrderValue in RestaurantBillObject["Orders"].GetArray())
@@ -377,14 +409,15 @@ namespace RestoLAddition.Data
                                     CultureInfo.InvariantCulture);
                                 order.Shares.Add(
                                     new OrderShare(
-                                        OrderShareObject["Person"].GetString(),
+                                        //bill.Guests.First( guest => guest.Name == OrderShareObject["Guest"].GetString() ),
+                                        //bill.Guests.First(guest => guest.Name == OrderShareObject["Guest"].GetObject()["Name"].GetString()),
+                                        OrderShareObject["Guest"].GetString(),
                                         sharePrice
                                     )
                                 );
                             }
                         }
                     }
-                    bill.RebuildGuestListFromOrders();
                     this.Bills.Add(bill);
                 }
             }
