@@ -1,24 +1,11 @@
 ﻿using RestoLAddition.Common;
 using RestoLAddition.Data;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Threading.Tasks;
-using System.Windows.Input;
+using System.Globalization;
 using Windows.ApplicationModel.Resources;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Graphics.Display;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Pivot Application template is documented at http://go.microsoft.com/fwlink/?LinkID=391641
@@ -158,45 +145,36 @@ namespace RestoLAddition
         {
         }
 
-        private void ValidateDishAppBarButton_Click(object sender, RoutedEventArgs e)
+        private async void ValidateDishAppBarButton_Click(object sender, RoutedEventArgs e)
         {
-            //TODO : save changes
-            var itemOrder = this.DefaultViewModel[OrderKey] as Order;
-            var TBIDishName = FindName("TBIDishName") as TextBox;
-            if (TBIDishName.Text != itemOrder.Title)
+            try
             {
-                Debug.WriteLine("change dish name from: " + itemOrder.Title + " to: " + TBIDishName.Text);
-                //RestaurantBill group;
-                //var group = await SampleDataSource.GetGroupOfItemAsync(item.UniqueId);
-                //group.Items.SetItem(456, item);
-                //Task.Run(async () => await SampleDataSource.GetGroupOfItemAsync(item.UniqueId)).Result;
-                //group.Items
-                //item.
-                //item.Title = TBIDishName.Text;
+                var itemOrder = this.DefaultViewModel[OrderKey] as Order;
+
+                // change dish name
+                var TBIDishName = FindName("TBIDishName") as TextBox;
+                if (TBIDishName.Text != itemOrder.Title)
+                {
+                    //Debug.WriteLine("change dish name from: " + itemOrder.Title + " to: " + TBIDishName.Text);
+                    itemOrder.Title = TBIDishName.Text;
+                }
+
+                // change dish price
+                var TBIDishPrice = FindName("TBIDishPrice") as TextBox;
+                if (TBIDishPrice.Text != itemOrder.Price.ToString(CultureInfo.CurrentCulture))
+                {
+                    //Debug.WriteLine("change dish price from: " + itemOrder.Price.ToString(CultureInfo.CurrentCulture) + " to: " + TBIDishPrice.Text);
+                    itemOrder.Price = decimal.Parse(TBIDishPrice.Text, NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture);
+                }
+
+                this.navigationHelper.GoBack();
             }
-
-            this.navigationHelper.GoBack();
+            catch (FormatException ex)
+            {
+                MessageDialog messageDialog = new MessageDialog("Error: " + ex.Message, "Not a Number");    // TODO : localize the text
+                var result = await messageDialog.ShowAsync();
+            }
         }
-
-        //private async void ValidateDishAppBarButton_Click(object sender, RoutedEventArgs e)
-        //{
-        //    //TODO : save changes
-        //    var item = this.DefaultViewModel["Item"] as Order;
-        //    var TBIDishName = FindName("TBIDishName") as TextBox;
-        //    if (TBIDishName.Text != item.Title)
-        //    {
-        //        Debug.WriteLine("change dish name from: "+ item.Title + " to: "+ TBIDishName.Text);
-        //        //RestaurantBill group;
-        //        var group = await SampleDataSource.GetGroupOfItemAsync(item.UniqueId);
-        //        group.Items.SetItem(456, item);
-        //        //Task.Run(async () => await SampleDataSource.GetGroupOfItemAsync(item.UniqueId)).Result;
-        //        //group.Items
-        //        //item.
-        //        //item.Title = TBIDishName.Text;
-        //    }
-
-        //    this.navigationHelper.GoBack();
-        //}
 
         private void DiscardEditDishAppBarButton_Click(object sender, RoutedEventArgs e)
         {

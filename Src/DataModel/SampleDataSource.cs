@@ -13,6 +13,7 @@ using Windows.Storage.Streams;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.Devices.Geolocation;
+using System.ComponentModel;
 
 // The data model defined by this file serves as a representative example of a strongly-typed
 // model.  The property names chosen coincide with data bindings in the standard item templates.
@@ -78,7 +79,7 @@ namespace RestoLAddition.Data
     /// <summary>
     /// une commande (générique) : une entrée, un plat, une boisson, un dessert, ...
     /// </summary>
-    public class Order
+    public class Order : INotifyPropertyChanged
     {
         public Order(String uniqueId, String title, String subtitle, String imagePath, String description, String content, Decimal price)
         {
@@ -93,18 +94,30 @@ namespace RestoLAddition.Data
         }
 
         public string UniqueId { get; private set; }
-        public string Title { get; private set; }
+        private string _title;
+        public string Title { get { return _title; } set { _title = value; OnPropertyChanged(new PropertyChangedEventArgs("Title")); } }
         public string Subtitle { get; private set; }
         public string Description { get; private set; }
         public string ImagePath { get; private set; }
         public string Content { get; private set; }
-        public decimal Price { get; private set; }
+        public decimal _price;
+        public decimal Price { get { return _price; } set { _price = value; OnPropertyChanged(new PropertyChangedEventArgs("Price")); } }
 
         /// <summary>
         /// ce plat est à payer par plusieurs personnnes
         /// la liste des personnes qui doivent payer pour ce plat est Shares
         /// </summary>
         public ObservableCollection<OrderShare> Shares { get; private set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, e);
+            }
+        }
 
         public override string ToString()
         {
