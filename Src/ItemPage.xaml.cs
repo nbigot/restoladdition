@@ -17,7 +17,10 @@ namespace RestoLAddition
     /// </summary>
     public sealed partial class ItemPage : Page
     {
+        private const string BillKey = "Bill";
         private const string OrderKey = "ItemOrder";
+        private RestaurantBill bill;
+        private Order orderItem;
         private readonly NavigationHelper navigationHelper;
         private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
         private readonly ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
@@ -59,10 +62,13 @@ namespace RestoLAddition
         /// <see cref="Frame.Navigate(Type, Object)"/> when this page was initially requested and
         /// a dictionary of state preserved by this page during an earlier
         /// session.  The state will be null the first time a page is visited.</param>
-        private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
+        private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            var item = await SampleDataSource.GetOrderAsync((string)e.NavigationParameter);
-            this.DefaultViewModel[OrderKey] = item;
+            var tuple = e.NavigationParameter as Tuple<RestaurantBill, Order>;
+            this.bill = tuple.Item1;
+            this.orderItem = tuple.Item2;
+            this.DefaultViewModel[BillKey] = bill;
+            this.DefaultViewModel[OrderKey] = orderItem;
         }
 
         /// <summary>
@@ -131,12 +137,7 @@ namespace RestoLAddition
             if ((int)result.Id == 1)
             {
                 // delete this dish and navigate to main page
-                var itemOrder = this.DefaultViewModel[OrderKey] as Order;
-                /*var oldDis = bill;
-                this.DefaultViewModel[CurrentBill] = null;
-                bill = null;
-                await SampleDataSource.DeleteBillAsync(oldBill.UniqueId);*/
-
+                bill.Orders.Remove( orderItem );
                 this.navigationHelper.GoBack();
             }
         }
@@ -149,22 +150,20 @@ namespace RestoLAddition
         {
             try
             {
-                var itemOrder = this.DefaultViewModel[OrderKey] as Order;
-
                 // change dish name
                 var TBIDishName = FindName("TBIDishName") as TextBox;
-                if (TBIDishName.Text != itemOrder.Title)
+                if (TBIDishName.Text != orderItem.Title)
                 {
                     //Debug.WriteLine("change dish name from: " + itemOrder.Title + " to: " + TBIDishName.Text);
-                    itemOrder.Title = TBIDishName.Text;
+                    orderItem.Title = TBIDishName.Text;
                 }
 
                 // change dish price
                 var TBIDishPrice = FindName("TBIDishPrice") as TextBox;
-                if (TBIDishPrice.Text != itemOrder.Price.ToString(CultureInfo.CurrentCulture))
+                if (TBIDishPrice.Text != orderItem.Price.ToString(CultureInfo.CurrentCulture))
                 {
                     //Debug.WriteLine("change dish price from: " + itemOrder.Price.ToString(CultureInfo.CurrentCulture) + " to: " + TBIDishPrice.Text);
-                    itemOrder.Price = decimal.Parse(TBIDishPrice.Text, NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture);
+                    orderItem.Price = decimal.Parse(TBIDishPrice.Text, NumberStyles.AllowDecimalPoint, CultureInfo.CurrentCulture);
                 }
 
                 this.navigationHelper.GoBack();
@@ -183,18 +182,15 @@ namespace RestoLAddition
 
         private void TextBox_Dish_Name_Loaded(object sender, RoutedEventArgs e)
         {
-            var itemOrder = this.DefaultViewModel[OrderKey] as Order;
             var textbox = sender as TextBox;
-            textbox.Text = itemOrder.Title;
+            textbox.Text = orderItem.Title;
         }
 
         private void TextBox_Dish_Price_Loaded(object sender, RoutedEventArgs e)
         {
-            var itemOrder = this.DefaultViewModel[OrderKey] as Order;
-            //Debug.WriteLine("price: "+ item.Price);
             var textbox = sender as TextBox;
             //textbox.Text = item.Price.ToString("0:0.##");
-            textbox.Text = itemOrder.Price.ToString("F");
+            textbox.Text = orderItem.Price.ToString("F");
         }
     }
 }
