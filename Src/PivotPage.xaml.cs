@@ -107,25 +107,22 @@ namespace RestoLAddition
         /// </summary>
         private void BarButtonAdd_Click(object sender, RoutedEventArgs e)
         {
-            //string groupName = this.pivot.SelectedIndex == 0 ? CurrentBill : SecondGroupName;
-            //var group = this.DefaultViewModel[groupName] as RestaurantBill;
-            var nextItemId = bill.Orders.Count + 1;
-            var newItem = new Order(
-                string.Format(CultureInfo.InvariantCulture, "Group-{0}-Item-{1}", this.pivot.SelectedIndex + 1, nextItemId),
-                string.Format(CultureInfo.CurrentCulture, this.resourceLoader.GetString("NewItemTitle"), nextItemId),
+            var nextOrderId = bill.Orders.Count + 1;
+            var newOrder = new Order(
+                string.Format(CultureInfo.InvariantCulture, "Group-{0}-Item-{1}", this.pivot.SelectedIndex + 1, nextOrderId),
+                string.Format(CultureInfo.CurrentCulture, this.resourceLoader.GetString("NewItemTitle"), nextOrderId),
                 string.Empty,
                 string.Empty,
                 this.resourceLoader.GetString("NewItemDescription"),
                 string.Empty,
                 0);
 
-            bill.Orders.Add(newItem);
+            bill.Orders.Add(newOrder);
 
-            // Scroll the new item into view.
-            var container = this.pivot.ContainerFromIndex(this.pivot.SelectedIndex) as ContentControl;
-// attention bug: container.ContentTemplateRoot est null si je clique sur (+) depuis la page de plats!!!
-            var listView = container.ContentTemplateRoot as ListView;
-            listView.ScrollIntoView(newItem, ScrollIntoViewAlignment.Leading);
+            if (!Frame.Navigate(typeof(ItemPage), new Tuple<RestaurantBill, Order>(bill, newOrder)))
+            {
+                throw new Exception(this.resourceLoader.GetString("NavigationFailedExceptionMessage"));
+            }
         }
 
         /// <summary>

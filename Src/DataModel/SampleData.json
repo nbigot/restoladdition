@@ -110,14 +110,6 @@
             "Price": "2.10"
           }
         ]
-      },
-      {
-        "UniqueId": "Group-2-Item-6",
-        "Title": "Plat dont le nom est vraiment trop long pour être affiché sur une seule ligne",
-        "Subtitle": "Item Subtitle: 3",
-        "ImagePath": "Assets/LightGray.png",
-        "Description": "",
-        "Content": ""
       }
     ]
   }

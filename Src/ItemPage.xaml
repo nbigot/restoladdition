@@ -37,16 +37,12 @@
             <TextBlock Text="{Binding Title}" Style="{ThemeResource HeaderTextBlockStyle}" Margin="0,-6.5,0,26.5" CharacterSpacing="{ThemeResource PivotHeaderItemCharacterSpacing}" />
         </StackPanel>
 
-        <!-- 
-            TODO: Content should be placed within the following grid 
-                  to show details for the current item
-        -->
         <Grid Grid.Row="1" x:Name="ContentRoot" Margin="19,9.5,19,0">
             <StackPanel>
                 <TextBlock x:Uid="DishName" Text="Nom du plat" FontSize="22" />
                 <TextBox x:Name="TBIDishName" Loaded="TextBox_Dish_Name_Loaded" />
                 <TextBlock x:Uid="DishPrice" Text="Prix" Margin="0,20,0,0" FontSize="22" />
-                <TextBox x:Name="TBIDishPrice" InputScope="Number" Loaded="TextBox_Dish_Price_Loaded" TextAlignment="Right" />
+                <TextBox x:Name="TBIDishPrice" InputScope="Number" Loaded="TextBox_Dish_Price_Loaded" />
             </StackPanel>
         </Grid>
     </Grid>
