@@ -23,20 +23,19 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 // The Pivot Application template is documented at http://go.microsoft.com/fwlink/?LinkID=391641
-
 namespace RestoLAddition
 {
     public sealed partial class PivotPage : Page
     {
         private const string CurrentBill = "CurrentBill";
-        //private const string SecondGroupName = "SecondGroup";
-        //private const string ThirdGroupName = "SecondGroup";
 
         private readonly NavigationHelper navigationHelper;
         private readonly ObservableDictionary defaultViewModel = new ObservableDictionary();
         private readonly ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
 
         private RestaurantBill bill;
+
+        private IDataSource DataRepository { get { return SampleDataSource.GetInstance; } }
 
         public PivotPage()
         {
@@ -242,7 +241,7 @@ namespace RestoLAddition
                 var oldBill = bill;
                 this.DefaultViewModel[CurrentBill] = null;
                 bill = null;
-                await SampleDataSource.GetInstance.DeleteBillAsync(oldBill.UniqueId);
+                await DataRepository.DeleteBillAsync(oldBill.UniqueId);
 
                 this.navigationHelper.GoBack();
             }

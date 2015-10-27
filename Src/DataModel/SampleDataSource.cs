@@ -32,8 +32,12 @@ namespace RestoLAddition.Data
     /// </summary>
     public sealed class SampleDataSource : DataSource
     {
+        #region singleton
+
         private static SampleDataSource _dataSource = new SampleDataSource();
         public static SampleDataSource GetInstance { get { return _dataSource; } }
+
+        #endregion
 
         protected override async Task GetDataAsync()
         {

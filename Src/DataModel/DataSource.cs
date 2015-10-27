@@ -19,7 +19,7 @@ namespace RestoLAddition.Data
     /// <summary>
     /// Creates a collection of bills and items with content read from a static json file.
     /// 
-    /// SampleDataSource initializes with data read from a static json file included in the 
+    /// DataSource initializes with data read from a static json file included in the 
     /// project.  This provides sample data at both design-time and run-time.
     /// </summary>
     public abstract class DataSource : IDataSource
