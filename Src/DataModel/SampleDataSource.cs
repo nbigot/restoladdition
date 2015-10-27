@@ -212,7 +212,7 @@ namespace RestoLAddition.Data
     /// </summary>
     public sealed class SampleDataSource
     {
-        private static SampleDataSource _sampleDataSource = new SampleDataSource();
+        private static SampleDataSource _dataSource = new SampleDataSource();
 
         public Boolean LoadStatus { get; private set; } = false;
         private ObservableCollection<RestaurantBill> _bills = new ObservableCollection<RestaurantBill>();
@@ -223,11 +223,11 @@ namespace RestoLAddition.Data
 
         public static async Task<string> GenerateNewDefaultNameForBill()
         {
-            await _sampleDataSource.GetSampleDataAsync();
+            await _dataSource.GetSampleDataAsync();
             var now = DateTime.Now;
             var title = "Resto " + now.ToString("ddd d MMM", CultureInfo.CurrentCulture);
             var i = 0;
-            while (_sampleDataSource.Bills.Any(billIt => billIt.Title == title))
+            while (_dataSource.Bills.Any(billIt => billIt.Title == title))
             {
                 title = string.Format("Resto {0} ({1})", now.ToString("ddd d MMM", CultureInfo.CurrentCulture), ++i);
             }
@@ -237,7 +237,7 @@ namespace RestoLAddition.Data
 
         public static async Task<RestaurantBill> AddBillAsync(string title, List<string> guests)
         {
-            await _sampleDataSource.GetSampleDataAsync();
+            await _dataSource.GetSampleDataAsync();
 
             Location location = null;
             var geoloc = await GetLocation();
@@ -256,16 +256,16 @@ namespace RestoLAddition.Data
             {
                 bill.AddGuest(guest);
             }
-            _sampleDataSource.Bills.Add(bill);
+            _dataSource.Bills.Add(bill);
             return bill;
         }
 
         public static async Task<bool> DeleteBillAsync(string uniqueId)
         {
-            await _sampleDataSource.GetSampleDataAsync();
+            await _dataSource.GetSampleDataAsync();
 
-            return _sampleDataSource.Bills.Remove(
-                _sampleDataSource.Bills.First( b => b.UniqueId == uniqueId)
+            return _dataSource.Bills.Remove(
+                _dataSource.Bills.First( b => b.UniqueId == uniqueId)
             );
         }
 
@@ -305,35 +305,35 @@ namespace RestoLAddition.Data
 
         public static async Task<IEnumerable<RestaurantBill>> GetBillsAsync()
         {
-            await _sampleDataSource.GetSampleDataAsync();
-            return _sampleDataSource.Bills;
+            await _dataSource.GetSampleDataAsync();
+            return _dataSource.Bills;
         }
 
         public static async Task<RestaurantBill> GetBillAsync(string uniqueId)
         {
-            await _sampleDataSource.GetSampleDataAsync();
+            await _dataSource.GetSampleDataAsync();
             // Simple linear search is acceptable for small data sets
-            var matches = _sampleDataSource.Bills.Where((bill) => bill.UniqueId.Equals(uniqueId));
+            var matches = _dataSource.Bills.Where((bill) => bill.UniqueId.Equals(uniqueId));
             if (matches.Count() == 1) return matches.First();
             return null;
         }
 
-        public static async Task<Order> GetOrderAsync(string uniqueId)
+        public async Task<Order> GetOrderAsync(string uniqueId)
         {
-            await _sampleDataSource.GetSampleDataAsync();
+            await _dataSource.GetSampleDataAsync();
             // Simple linear search is acceptable for small data sets
-            var matches = _sampleDataSource.Bills.SelectMany(bill => bill.Orders).Where((order) => order.UniqueId.Equals(uniqueId));
+            var matches = _dataSource.Bills.SelectMany(bill => bill.Orders).Where((order) => order.UniqueId.Equals(uniqueId));
             if (matches.Count() > 1)
                 throw new Exception("invalid data model : multiple occurences found for unique id : " + uniqueId);
             if (matches.Count() == 1) return matches.First();
             return null;
         }
 
-        public static async Task<RestaurantBill> GetGroupOfItemAsync(string uniqueId)
+        public async Task<RestaurantBill> GetGroupOfItemAsync(string uniqueId)
         {
-            await _sampleDataSource.GetSampleDataAsync();
+            await _dataSource.GetSampleDataAsync();
             // Simple linear search is acceptable for small data sets
-            var matches = _sampleDataSource.Bills.Where((bill) => bill.Orders.Any(order => order.UniqueId.Equals(uniqueId)));
+            var matches = _dataSource.Bills.Where((bill) => bill.Orders.Any(order => order.UniqueId.Equals(uniqueId)));
             if (matches.Count() == 1) return matches.First();
             return null;
         }
