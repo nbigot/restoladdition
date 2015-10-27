@@ -79,9 +79,6 @@ namespace RestoLAddition
         /// session. The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            // TODO: Create an appropriate data model for your problem domain to replace the sample data
-            //var bill = await SampleDataSource.GetBillAsync("Group-1");
-
             bill = e.NavigationParameter as RestaurantBill;
             this.DefaultViewModel[CurrentBill] = bill;
 
@@ -143,8 +140,6 @@ namespace RestoLAddition
         /// </summary>
         private void SecondPivot_Loaded(object sender, RoutedEventArgs e)
         {
-            //var RestaurantBill = await SampleDataSource.GetBillAsync("Group-2");
-            //this.DefaultViewModel[SecondGroupName] = RestaurantBill;
         }
 
         /// <summary>
@@ -152,8 +147,6 @@ namespace RestoLAddition
         /// </summary>
         private void ThirdPivot_Loaded(object sender, RoutedEventArgs e)
         {
-            //var RestaurantBill = await SampleDataSource.GetBillAsync("Group-2");
-            //this.DefaultViewModel[ThirdGroupName] = RestaurantBill;
         }
 
         #region NavigationHelper registration
@@ -249,7 +242,7 @@ namespace RestoLAddition
                 var oldBill = bill;
                 this.DefaultViewModel[CurrentBill] = null;
                 bill = null;
-                await SampleDataSource.DeleteBillAsync(oldBill.UniqueId);
+                await SampleDataSource.GetInstance.DeleteBillAsync(oldBill.UniqueId);
 
                 this.navigationHelper.GoBack();
             }

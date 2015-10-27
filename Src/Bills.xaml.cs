@@ -75,7 +75,7 @@ namespace RestoLAddition
         /// session.  The state will be null the first time a page is visited.</param>
         private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            var bills = await SampleDataSource.GetBillsAsync() as ObservableCollection<RestaurantBill>;
+            var bills = await SampleDataSource.GetInstance.GetBillsAsync() as ObservableCollection<RestaurantBill>;
             this.DefaultViewModel[BillsGroupName] = bills;
 
             ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
@@ -123,12 +123,12 @@ namespace RestoLAddition
 
         private async void BarButtonAddNote_Click(object sender, RoutedEventArgs e)
         {
-            var defaultTitle = await SampleDataSource.GenerateNewDefaultNameForBill();
+            var defaultTitle = await SampleDataSource.GetInstance.GenerateNewDefaultNameForBill();
             var dialog = new DialogEditResto(defaultTitle);
             var result = await dialog.ShowAsync();
             if (result == ContentDialogResult.Primary)
             {
-                var bill = await SampleDataSource.AddBillAsync( 
+                var bill = await SampleDataSource.GetInstance.AddBillAsync( 
                     dialog.RestaurantTitle,
                     dialog.GetGuestsNames()
                 );
@@ -142,7 +142,7 @@ namespace RestoLAddition
             if (menuFlyoutItem == null) return;
             var bill = menuFlyoutItem.DataContext as RestaurantBill;
             if (bill == null) return;
-            var bills = await SampleDataSource.GetBillsAsync() as ObservableCollection<RestaurantBill>;
+            var bills = await SampleDataSource.GetInstance.GetBillsAsync() as ObservableCollection<RestaurantBill>;
             bills.Remove(bill);
         }
 
