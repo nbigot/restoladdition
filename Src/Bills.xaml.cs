@@ -1,4 +1,5 @@
-﻿using RestoLAddition.Common;
+﻿using Microsoft.Practices.Unity;
+using RestoLAddition.Common;
 using RestoLAddition.Data;
 using System;
 using System.Collections.Generic;
@@ -36,7 +37,7 @@ namespace RestoLAddition
 
         private const string BillsGroupName = "BillsGroup";
 
-        private IDataSource DataRepository { get { return SampleDataSource.GetInstance; } }
+        private IDataSource DataRepository { get; set; }
 
         public Bills()
         {
@@ -77,6 +78,8 @@ namespace RestoLAddition
         /// session.  The state will be null the first time a page is visited.</param>
         private async void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
+            var tuple = e.NavigationParameter as Tuple<string, IDataSource>;
+            DataRepository = tuple.Item2;
             var bills = await DataRepository.GetBillsAsync() as ObservableCollection<RestaurantBill>;
             this.DefaultViewModel[BillsGroupName] = bills;
 
@@ -168,7 +171,7 @@ namespace RestoLAddition
         private void ItemBill_Tapped(object sender, TappedRoutedEventArgs e)
         {
             var bill = ((FrameworkElement)sender)?.DataContext as RestaurantBill;
-            Frame.Navigate(typeof(PivotPage), bill);
+            Frame.Navigate(typeof(PivotPage), new Tuple<IDataSource, RestaurantBill>(DataRepository, bill));
         }
     }
 }

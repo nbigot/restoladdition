@@ -35,7 +35,7 @@ namespace RestoLAddition
 
         private RestaurantBill bill;
 
-        private IDataSource DataRepository { get { return SampleDataSource.GetInstance; } }
+        private IDataSource DataRepository { get; set; }
 
         public PivotPage()
         {
@@ -78,7 +78,9 @@ namespace RestoLAddition
         /// session. The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            bill = e.NavigationParameter as RestaurantBill;
+            var tuple = e.NavigationParameter as Tuple<IDataSource, RestaurantBill>;
+            DataRepository = tuple.Item1;
+            bill = tuple.Item2;
             this.DefaultViewModel[CurrentBill] = bill;
 
             ResourceLoader resourceLoader = ResourceLoader.GetForCurrentView("Resources");
@@ -115,7 +117,7 @@ namespace RestoLAddition
 
             bill.Orders.Add(newOrder);
 
-            if (!Frame.Navigate(typeof(ItemPage), new Tuple<RestaurantBill, Order>(bill, newOrder)))
+            if (!Frame.Navigate(typeof(ItemPage), new Tuple<IDataSource, RestaurantBill, Order>(DataRepository, bill, newOrder)))
             {
                 throw new Exception(this.resourceLoader.GetString("NavigationFailedExceptionMessage"));
             }
@@ -128,7 +130,7 @@ namespace RestoLAddition
         {
             // Navigate to the appropriate destination page, configuring the new page
             // by passing required information as a navigation parameter
-            if (!Frame.Navigate(typeof(ItemPage), new Tuple<RestaurantBill, Order>(bill, e.ClickedItem as Order)))
+            if (!Frame.Navigate(typeof(ItemPage), new Tuple<IDataSource, RestaurantBill, Order>(DataRepository, bill, e.ClickedItem as Order)))
             {
                 throw new Exception(this.resourceLoader.GetString("NavigationFailedExceptionMessage"));
             }

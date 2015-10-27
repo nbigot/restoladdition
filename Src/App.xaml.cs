@@ -1,4 +1,6 @@
-﻿using RestoLAddition.Common;
+﻿using Microsoft.Practices.Unity;
+using RestoLAddition.Common;
+using RestoLAddition.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -28,6 +30,8 @@ namespace RestoLAddition
     {
         private TransitionCollection transitions;
 
+        private UnityContainer container;
+
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
         /// executed, and as such is the logical equivalent of main() or WinMain().
@@ -52,6 +56,9 @@ namespace RestoLAddition
                 this.DebugSettings.EnableFrameRateCounter = true;
             }
 #endif
+
+            // Initialize the IoC container type bindings
+            InitializeIocBindings();
 
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -107,7 +114,10 @@ namespace RestoLAddition
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter.
-                if (!rootFrame.Navigate(typeof(Bills), e.Arguments))    // PivotPage
+                if (!rootFrame.Navigate(
+                    typeof(Bills), 
+                    new Tuple<string, IDataSource>(e.Arguments, container.Resolve<IDataSource>())
+                ))    // PivotPage
                 {
                     throw new Exception("Failed to create initial page");
                 }
@@ -139,6 +149,14 @@ namespace RestoLAddition
             var deferral = e.SuspendingOperation.GetDeferral();
             await SuspensionManager.SaveAsync();
             deferral.Complete();
+        }
+
+        private void InitializeIocBindings()
+        {
+            container = new UnityContainer();
+            //container.RegisterType<IDataSource, SampleDataSource>();
+            var data = new SampleDataSource();
+            container.RegisterInstance<IDataSource>(data);
         }
     }
 }

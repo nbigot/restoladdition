@@ -19,6 +19,7 @@ namespace RestoLAddition
     {
         private const string BillKey = "Bill";
         private const string OrderKey = "ItemOrder";
+        private IDataSource DataRepository { get; set; }
         private RestaurantBill bill;
         private Order orderItem;
         private readonly NavigationHelper navigationHelper;
@@ -64,9 +65,10 @@ namespace RestoLAddition
         /// session.  The state will be null the first time a page is visited.</param>
         private void NavigationHelper_LoadState(object sender, LoadStateEventArgs e)
         {
-            var tuple = e.NavigationParameter as Tuple<RestaurantBill, Order>;
-            this.bill = tuple.Item1;
-            this.orderItem = tuple.Item2;
+            var tuple = e.NavigationParameter as Tuple<IDataSource, RestaurantBill, Order>;
+            this.DataRepository = tuple.Item1;
+            this.bill = tuple.Item2;
+            this.orderItem = tuple.Item3;
             this.DefaultViewModel[BillKey] = bill;
             this.DefaultViewModel[OrderKey] = orderItem;
         }
