@@ -18,5 +18,6 @@ namespace RestoLAddition.Data
         Task<RestaurantBill> GetGroupOfItemAsync(string uniqueId);
         Task<Geoposition> GetLocation();
         Task<Order> GetOrderAsync(string uniqueId);
+        Task<RestaurantBill> GetMostRecentBillAsync();
     }
 }

@@ -148,6 +148,12 @@ namespace RestoLAddition.Data
             return null;
         }
 
+        public async Task<RestaurantBill> GetMostRecentBillAsync()
+        {
+            await GetDataAsync();
+            return Bills.OrderByDescending(bill => bill.Date).First();
+        }
+
         protected abstract Task GetDataAsync();
     }
 }

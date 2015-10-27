@@ -20,7 +20,6 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 
 // The Pivot Application template is documented at http://go.microsoft.com/fwlink/?LinkID=391641
-
 namespace RestoLAddition
 {
     /// <summary>
@@ -98,6 +97,14 @@ namespace RestoLAddition
 
             if (rootFrame.Content == null)
             {
+                #region init voice commands
+
+                // https://msdn.microsoft.com/fr-fr/library/windows/apps/xaml/dn630430.aspx
+                var storageFile = await Windows.Storage.StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///VoiceCommands/VoiceCommandDefinition.xml"));
+                await Windows.Media.SpeechRecognition.VoiceCommandManager.InstallCommandSetsFromStorageFileAsync(storageFile);
+
+                #endregion
+
                 // Removes the turnstile navigation for startup.
                 if (rootFrame.ContentTransitions != null)
                 {
@@ -125,6 +132,115 @@ namespace RestoLAddition
 
             // Ensure the current window is active.
             Window.Current.Activate();
+        }
+
+
+        protected override async void OnActivated(IActivatedEventArgs args)
+        {
+            // When a Voice Command activates the app, this method is going to 
+            // be called and OnLaunched is not. Because of that we need similar
+            // code to the code we have in OnLaunched
+
+            // Initialize the IoC container type bindings
+            InitializeIocBindings();
+
+            Frame rootFrame = Window.Current.Content as Frame;
+
+            if (rootFrame == null)
+            {
+                rootFrame = new Frame();
+                rootFrame.CacheSize = 1;
+                rootFrame.Language = Windows.Globalization.ApplicationLanguages.Languages[0];
+                Window.Current.Content = rootFrame;
+                rootFrame.Navigate(
+                    typeof(Bills),
+                    new Tuple<string, IDataSource>(null, container.Resolve<IDataSource>())
+                );
+            }
+
+            Window.Current.Activate();
+
+            // For VoiceCommand activations, the activation Kind is ActivationKind.VoiceCommand
+            if (args.Kind == ActivationKind.VoiceCommand)
+            {
+                // since we know this is the kind, a cast will work fine
+                VoiceCommandActivatedEventArgs vcArgs = (VoiceCommandActivatedEventArgs) args;
+
+                // The NavigationTarget retrieved here is the value of the Target attribute in the
+                // Voice Command Definition xml Navigate node
+                string target = vcArgs.Result.SemanticInterpretation.Properties["NavigationTarget"][0];
+
+                // since the target is option, we check for its presence
+                if (!String.IsNullOrEmpty(target))
+                {
+                    // This GetType is a way get the type corresponding to target page
+                    // in order to navigate to the page.
+                    Type pageType = Type.GetType(typeof(Bills).Namespace + "." + target);
+
+                    // If the Target in the xml does not correspond to a page the pageType
+                    // will be null. Such issue would be caught in app development.
+                    // The two targets in the xml correspond to a page
+                    if (pageType != null)
+                    {
+                        // Navigate to the page passing the speech result for further processing
+                        // in the page. In Silverlight the navigation happens under the hood.
+                        // For Phone Store Apps, it is done explicitly like this:
+                        if (pageType == typeof(PivotPage))
+                        {
+                            // voice command: show lastest bill
+                            var DataRepository = container.Resolve<IDataSource>();
+                            var bill = await DataRepository.GetMostRecentBillAsync();
+                            if (bill != null)
+                            {
+                                // bill found
+                                rootFrame.Navigate(
+                                    typeof(PivotPage),
+                                    new Tuple<IDataSource, RestaurantBill>(DataRepository, bill)
+                                );
+                            }
+                            else
+                            {
+                                // no bill found : display home page
+                                rootFrame.Navigate(
+                                    typeof(Bills),
+                                    new Tuple<string, IDataSource>(null, container.Resolve<IDataSource>())
+                                );
+                            }
+                        }
+                        else if (pageType == typeof(Bills))
+                        {
+                            // voice command: add new bill
+                            var DataRepository = container.Resolve<IDataSource>();
+                            string defaultTitle = vcArgs.Result.SemanticInterpretation.Properties["restoName"].FirstOrDefault();
+                            if (string.IsNullOrEmpty(defaultTitle))
+                                defaultTitle = await DataRepository.GenerateNewDefaultNameForBill();
+                            var dialog = new DialogEditResto(defaultTitle);
+                            var result = await dialog.ShowAsync();
+                            if (result == ContentDialogResult.Primary)
+                            {
+                                var bill = await DataRepository.AddBillAsync(
+                                    dialog.RestaurantTitle,
+                                    dialog.GetGuestsNames()
+                                );
+                                rootFrame.Navigate(
+                                   typeof(PivotPage),
+                                   new Tuple<IDataSource, RestaurantBill>(DataRepository, bill)
+                               );
+                            }
+                            else
+                            {
+                                // new bill cancled, display home page
+                                rootFrame.Navigate(
+                                    typeof(Bills),
+                                    new Tuple<string, IDataSource>(null, container.Resolve<IDataSource>())
+                                );
+                            }
+                        }
+                        else
+                            throw new Exception("voice route not found");
+                    }
+                }
+            }
         }
 
         /// <summary>

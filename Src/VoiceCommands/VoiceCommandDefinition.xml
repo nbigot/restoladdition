@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Copyright (c) 2012 Microsoft Corporation.  All rights reserved.
+    Use of this sample source code is subject to the terms of the Microsoft license 
+    agreement under which you licensed this sample source code and is provided AS-IS.
+    If you did not accept the terms of the license agreement, you are not authorized 
+    to use this sample source code.  For the terms of the license, please see the 
+    license agreement between you and Microsoft.-->
+<!-- 
+Note the 1.1 in the schema version instead of 1.0. This includes the 8.1
+PhraseTopic. The schema is used for better Intellisense support.
+-->
+<VoiceCommands xmlns="http://schemas.microsoft.com/voicecommands/1.1">
+  <CommandSet xml:lang="fr-FR" Name="fr-FR">
+    <CommandPrefix>Resto</CommandPrefix>
+    <Example> Afficher la dernière note </Example>
+    <Command Name="ShowLastBill">
+      <Example> Afficher la derniere note </Example>
+      <ListenFor> Afficher la [toute] dernière note </ListenFor>
+      <ListenFor> Afficher [la] [dernière] note </ListenFor>
+      <ListenFor> Afficher [la] note la plus récente </ListenFor>
+      <Feedback> Afficher la note la plus récente ... </Feedback>
+      <Navigate Target="PivotPage"/>
+    </Command>
+    <Command Name="NewBill">
+      <Example> Ajouter une note </Example>
+      <ListenFor> Nouvelle note pour {restoName} </ListenFor>
+      <ListenFor> Ajouter [une] note pour {restoName} </ListenFor>
+      <ListenFor> Nouvelle note [de restaurant] </ListenFor>
+      <ListenFor> Nouvelle addition {restoName} </ListenFor>
+      <ListenFor> Ajouter [une] [nouvelle] note [de restaurant] [pour] {restoName} </ListenFor>
+      <ListenFor> Ajouter [une] [nouvelle] addition [de restaurant] [pour] {restoName} </ListenFor>
+      <Feedback> Ajouter une note ... </Feedback>
+      <Navigate Target="Bills"/>
+    </Command>
+    <PhraseTopic Label="restoName" Scenario="Dictation"/>
+    <!--<PhraseTopic Label="restoName" Scenario="Natural Language"/>-->
+  </CommandSet>
+  <CommandSet xml:lang="en-US" Name="en-US">
+    <CommandPrefix>Resto</CommandPrefix>
+    <Example> Show last bill </Example>
+    <Command Name="ShowLastBill">
+      <Example> Show last bill </Example>
+      <ListenFor> Show last bill </ListenFor>
+      <ListenFor> Show latest bill </ListenFor>
+      <ListenFor> Display last bill </ListenFor>
+      <ListenFor> Display latest bill </ListenFor>
+      <ListenFor> Display [the] most recent bill </ListenFor>
+      <Feedback> Show latest bill ... </Feedback>
+      <Navigate Target="PivotPage"/>
+    </Command>
+    <Command Name="NewBill">
+      <Example> Add a new bill </Example>
+      <ListenFor> Add [a] [new] bill [for] {restoName} </ListenFor>
+      <ListenFor> New bill [for] {restoName} </ListenFor>
+      <ListenFor> Create [a] [new] bill [for] {restoName} </ListenFor>
+      <ListenFor> Append [a] [new] bill [for] {restoName} </ListenFor>
+      <ListenFor> Insert [a] [new] bill [for] {restoName} </ListenFor>
+      <Feedback> Add a new bill ... </Feedback>
+      <Navigate Target="Bills"/>
+    </Command>
+    <PhraseTopic Label="restoName" Scenario="Dictation"/>
+    <!--<PhraseTopic Label="restoName" Scenario="Natural Language"/>-->
+  </CommandSet>
+</VoiceCommands>
