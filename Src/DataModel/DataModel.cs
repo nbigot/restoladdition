@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.ComponentModel;
+using Newtonsoft.Json;
 
 namespace RestoLAddition.Data
 {
@@ -113,6 +114,7 @@ namespace RestoLAddition.Data
     /// </summary>
     public class Location
     {
+        [JsonConstructor]
         public Location(String Longitude, String Latitude)
         {
             this.Longitude = Longitude;

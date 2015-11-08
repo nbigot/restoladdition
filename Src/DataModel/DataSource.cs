@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
@@ -180,6 +183,24 @@ namespace RestoLAddition.Data
                 return;
             }
 
+            var tmpBills = JsonConvert.DeserializeObject<MainJsonDataObject>(jsonText);
+            foreach (var bill in tmpBills.Bills) {
+                this.Bills.Add(bill);
+            }
+
+            //TODO: bug date pas deserialisee correctement
+            // probeleme avec le viewer de xaml qui n'est pas compatible probablement!!!! :((
+            // http://www.newtonsoft.com/json/help/html/DatesInJSON.htm
+            // http://www.newtonsoft.com/json/help/html/T_Newtonsoft_Json_DateFormatHandling.htm
+        }
+
+        protected void old__DeserializeJson(string jsonText)
+        {
+            if (string.IsNullOrWhiteSpace(jsonText))
+            {
+                return;
+            }
+
             JsonObject jsonObject = JsonObject.Parse(jsonText);
             JsonArray jsonArray = jsonObject["Bills"].GetArray();
 
@@ -273,10 +294,12 @@ namespace RestoLAddition.Data
             }
         }
 
-        protected string SerializeJson()
+        protected async Task<string> SerializeJson()
         {
-            string jsonText ="";//TODO
-            return jsonText;
+            return await Task.Run(() => {
+                    string jsonText = JsonConvert.SerializeObject(this.Bills);
+                    return $"{{\"Bills\":{jsonText}}}";
+            });
         }
 
         protected virtual void OnCollectionChangedBills(object sender, NotifyCollectionChangedEventArgs e)
@@ -285,5 +308,10 @@ namespace RestoLAddition.Data
 
         protected abstract Task<string> LoadDataAsync();
         protected abstract Task SaveDataAsync();
+    }
+
+    internal class MainJsonDataObject
+    {
+        public List<RestaurantBill> Bills { get; set; }
     }
 }

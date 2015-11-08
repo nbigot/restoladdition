@@ -35,8 +35,9 @@ namespace RestoLAddition.Data
 
         protected override async Task SaveDataAsync()
         {
-            string jsonText = SerializeJson();
+            var serializeJsonTask = SerializeJson();
             var file = await ApplicationData.Current.RoamingFolder.CreateFileAsync(DataFilename, CreationCollisionOption.ReplaceExisting);
+            var jsonText = await serializeJsonTask;
             await FileIO.WriteTextAsync(file, jsonText);
         }
 

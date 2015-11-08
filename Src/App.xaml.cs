@@ -71,7 +71,6 @@ namespace RestoLAddition
                 // Associate the frame with a SuspensionManager key.
                 SuspensionManager.RegisterFrame(rootFrame, "AppFrame");
 
-                // TODO: Change this value to a cache size that is appropriate for your application.
                 rootFrame.CacheSize = 1;
 
                 // Set the default language
@@ -271,8 +270,8 @@ namespace RestoLAddition
         {
             container = new UnityContainer();
             /*container.RegisterType<IDataSource, SampleDataSource>();*/
-            var data = new SampleDataSource();
-            //var data = new LocalDataSource();
+            //var data = new SampleDataSource();
+            var data = new LocalDataSource();
             container.RegisterInstance<IDataSource>(data);
         }
     }
