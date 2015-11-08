@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Windows.Data.Json;
 using Windows.Devices.Geolocation;
 
 // The data model defined by this file serves as a representative example of a strongly-typed
@@ -154,6 +157,133 @@ namespace RestoLAddition.Data
             return Bills.OrderByDescending(bill => bill.Date).First();
         }
 
-        protected abstract Task GetDataAsync();
+        protected async Task GetDataAsync()
+        {
+            if (this.LoadStatus)
+                return;
+            LoadStatus = true;
+
+            this.Bills.CollectionChanged -= this.OnCollectionChangedBills;
+
+            this.Bills.Clear();
+
+            string jsonText = await LoadDataAsync();
+            DeserializeJson(jsonText);
+
+            this.Bills.CollectionChanged += this.OnCollectionChangedBills;
+        }
+
+        protected void DeserializeJson(string jsonText)
+        {
+            if (string.IsNullOrWhiteSpace(jsonText))
+            {
+                return;
+            }
+
+            JsonObject jsonObject = JsonObject.Parse(jsonText);
+            JsonArray jsonArray = jsonObject["Bills"].GetArray();
+
+            try
+            {
+                foreach (JsonValue RestaurantBillValue in jsonArray)
+                {
+                    JsonObject RestaurantBillObject = RestaurantBillValue.GetObject();
+                    DateTime date = DateTime.Now;
+                    if (RestaurantBillObject.ContainsKey("Date"))
+                    {
+                        // "Date": "/Date(2008-06-15T21:15:07)/",
+                        // http://regexlib.com/(X(1)A(plohCQBrb3JPpHX7KcH8auVKuRp8DdGM8wp_WQvQnRkqt078aQ_FHNpu-E3Q15qMcj_h5r_e1sDU99su-W3jeSa4Rg1YPf-sQ2t6j3wMh1hddZDrF4vczWP07PVccTC83u9Xx3nZSy-1p7Y2br4Fi6q9t_ZFiu_CyGmjBW-cH0xS1ybSZ5-oc4Nut3_tlJ_30))/REDetails.aspx?regexp_id=93
+                        var r = new Regex(@"(?<grdate>20\d{2}(-|\/)((0[1-9])|(1[0-2]))(-|\/)((0[1-9])|([1-2][0-9])|(3[0-1]))(T|\s)(([0-1][0-9])|(2[0-3])):([0-5][0-9]):([0-5][0-9]))");
+                        var strDate = r.Match(RestaurantBillObject["Date"].GetString()).Groups["grdate"].Value;
+                        if (!string.IsNullOrEmpty(strDate))
+                        {
+                            date = DateTime.Parse(strDate);
+                        }
+                    }
+
+                    Location location = null;
+                    if (RestaurantBillObject.ContainsKey("Location"))
+                    {
+                        JsonObject loc = RestaurantBillObject["Location"].GetObject();
+                        location = new Location(loc["Longitude"].GetString(), loc["Latitude"].GetString());
+                    }
+
+                    RestaurantBill bill = new RestaurantBill(
+                        RestaurantBillObject["UniqueId"].GetString(),
+                        RestaurantBillObject["Title"].GetString(),
+                        RestaurantBillObject["Subtitle"].GetString(),
+                        RestaurantBillObject["ImagePath"].GetString(),
+                        RestaurantBillObject["Description"].GetString(),
+                        date,
+                        location
+                    );
+
+                    foreach (JsonValue GuestValue in RestaurantBillObject["Guests"].GetArray())
+                    {
+                        bill.AddGuest(GuestValue.GetString());
+                    }
+
+                    foreach (JsonValue OrderValue in RestaurantBillObject["Orders"].GetArray())
+                    {
+                        JsonObject OrderObject = OrderValue.GetObject();
+                        decimal price = 0;
+                        price = decimal.Parse(
+                            OrderObject.ContainsKey("Price") ? (OrderObject["Price"].GetString()) : "0",
+                            NumberStyles.AllowDecimalPoint,
+                            CultureInfo.InvariantCulture);
+                        var order = new Order(
+                            OrderObject["UniqueId"].GetString(),
+                            OrderObject["Title"].GetString(),
+                            OrderObject["Subtitle"].GetString(),
+                            OrderObject["ImagePath"].GetString(),
+                            OrderObject["Description"].GetString(),
+                            OrderObject["Content"].GetString(),
+                            price
+                        );
+                        bill.Orders.Add(order);
+
+                        if (OrderObject.Keys.Contains("Shares"))
+                        {
+                            foreach (JsonValue OrderShareValue in OrderObject["Shares"].GetArray())
+                            {
+                                JsonObject OrderShareObject = OrderShareValue.GetObject();
+                                decimal sharePrice = 0;
+                                sharePrice = decimal.Parse(
+                                    OrderShareObject.ContainsKey("Price") ? (OrderShareObject["Price"].GetString()) : "0",
+                                    NumberStyles.AllowDecimalPoint,
+                                    CultureInfo.InvariantCulture);
+                                order.Shares.Add(
+                                    new OrderShare(
+                                        //bill.Guests.First( guest => guest.Name == OrderShareObject["Guest"].GetString() ),
+                                        //bill.Guests.First(guest => guest.Name == OrderShareObject["Guest"].GetObject()["Name"].GetString()),
+                                        OrderShareObject["Guest"].GetString(),
+                                        sharePrice
+                                    )
+                                );
+                            }
+                        }
+                    }
+                    this.Bills.Add(bill);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Exception in GetDataAsync : " + ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
+
+        protected string SerializeJson()
+        {
+            string jsonText ="";//TODO
+            return jsonText;
+        }
+
+        protected virtual void OnCollectionChangedBills(object sender, NotifyCollectionChangedEventArgs e)
+        {
+        }
+
+        protected abstract Task<string> LoadDataAsync();
+        protected abstract Task SaveDataAsync();
     }
 }

@@ -117,6 +117,7 @@
     <Compile Include="DataModel\DataModel.cs" />
     <Compile Include="DataModel\DataSource.cs" />
     <Compile Include="DataModel\IDataSource.cs" />
+    <Compile Include="DataModel\LocalDataSource.cs" />
     <Compile Include="DataModel\SampleDataSource.cs" />
     <Compile Include="DialogEditResto.xaml.cs">
       <DependentUpon>DialogEditResto.xaml</DependentUpon>

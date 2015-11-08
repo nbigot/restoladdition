@@ -270,8 +270,9 @@ namespace RestoLAddition
         private void InitializeIocBindings()
         {
             container = new UnityContainer();
-            //container.RegisterType<IDataSource, SampleDataSource>();
+            /*container.RegisterType<IDataSource, SampleDataSource>();*/
             var data = new SampleDataSource();
+            //var data = new LocalDataSource();
             container.RegisterInstance<IDataSource>(data);
         }
     }
